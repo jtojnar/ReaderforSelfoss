@@ -1,0 +1,84 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
+
+apply plugin: 'com.android.application'
+
+apply plugin: 'io.fabric'
+
+apply plugin: 'kotlin-android'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.3"
+    defaultConfig {
+        applicationId "bou.amine.apps.readerforselfoss"
+        minSdkVersion 16
+        targetSdkVersion 25
+        versionCode 1500
+        versionName "1.5.0.0"
+
+        // Enabling multidex support.
+        multiDexEnabled true
+        lintOptions {
+            abortOnError true
+            disable 'InvalidPackage'
+        }
+        vectorDrawables.useSupportLibrary = true
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'),
+                    'proguard-rules.pro'
+        }
+    }
+    flavorDimensions "build"
+    productFlavors {
+        githubConfig {
+            versionNameSuffix '-github'
+            dimension "build"
+            buildConfigField "boolean", "GITHUB_VERSION", "true"
+        }
+        storeConfig {
+            versionNameSuffix '-store'
+            dimension "build"
+            buildConfigField "boolean", "GITHUB_VERSION", "false"
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
+    // Android Support
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    // Firebase + crashlytics
+    compile 'com.google.firebase:firebase-core:10.2.4'
+    compile 'com.google.firebase:firebase-config:10.2.4'
+    compile 'com.google.firebase:firebase-invites:10.2.4'
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+        transitive = true;
+    }
+
+    //multidex
+    compile 'com.android.support:multidex:1.0.1'
+}
+
+
+
+
+apply plugin: 'com.google.gms.google-services'
