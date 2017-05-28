@@ -68,7 +68,7 @@ class AddSourceActivity : AppCompatActivity() {
             api.spouts().enqueue(object : Callback<Map<String, Spout>> {
                 override fun onResponse(call: Call<Map<String, Spout>>, response: Response<Map<String, Spout>>) {
                     if (response.body() != null) {
-                        items = response.body()
+                        items = response.body()!!
 
                         val itemsStrings = items.map { it.value.name }
                         for ((key, value) in items) {
@@ -106,7 +106,7 @@ class AddSourceActivity : AppCompatActivity() {
         } else {
             api.createSource(title, url, mSpoutsValue!!, mTags.text.toString(), "").enqueue(object : Callback<SuccessResponse> {
                 override fun onResponse(call: Call<SuccessResponse>, response: Response<SuccessResponse>) {
-                    if (response.body() != null && response.body().isSuccess) {
+                    if (response.body() != null && response.body()!!.isSuccess) {
                         finish()
                     } else {
                         Toast.makeText(this@AddSourceActivity, R.string.cant_create_source, Toast.LENGTH_SHORT).show()

@@ -14,7 +14,6 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.support.v7.widget.helper.ItemTouchHelper
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -36,7 +35,6 @@ import com.github.stkent.amplify.tracking.Amplify
 import com.google.android.gms.appinvite.AppInviteInvitation
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
-import com.google.firebase.crash.FirebaseCrash
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.LibsBuilder
@@ -188,8 +186,6 @@ class HomeActivity : AppCompatActivity() {
                     tabNew!!.setBadgeCount(items.size - 1)
 
                 } catch (e: IndexOutOfBoundsException) {
-                    FirebaseCrash.logcat(Log.ERROR, "SWIPE ERROR", "Swipe index out of bound")
-                    FirebaseCrash.report(e)
                 }
 
             }
@@ -247,7 +243,7 @@ class HomeActivity : AppCompatActivity() {
         elementsShown = UNREAD_SHOWN
         api!!.unreadItems.enqueue(object : Callback<List<Item>> {
             override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
-                if (response.body() != null && response.body().isNotEmpty()) {
+                if (response.body() != null && response.body()!!.isNotEmpty()) {
                     items = response.body() as ArrayList<Item>
                 } else {
                     items = ArrayList()
@@ -267,7 +263,7 @@ class HomeActivity : AppCompatActivity() {
         elementsShown = READ_SHOWN
         api!!.readItems.enqueue(object : Callback<List<Item>> {
             override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
-                if (response.body() != null && response.body().isNotEmpty()) {
+                if (response.body() != null && response.body()!!.isNotEmpty()) {
                     items = response.body() as ArrayList<Item>
                 } else {
                     items = ArrayList()
@@ -287,7 +283,7 @@ class HomeActivity : AppCompatActivity() {
         elementsShown = FAV_SHOWN
         api!!.starredItems.enqueue(object : Callback<List<Item>> {
             override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
-                if (response.body() != null && response.body().isNotEmpty()) {
+                if (response.body() != null && response.body()!!.isNotEmpty()) {
                     items = response.body() as ArrayList<Item>
                 } else {
                     items = ArrayList()
@@ -360,7 +356,7 @@ class HomeActivity : AppCompatActivity() {
 
                     api!!.readAll(ids).enqueue(object : Callback<SuccessResponse> {
                         override fun onResponse(call: Call<SuccessResponse>, response: Response<SuccessResponse>) {
-                            if (response.body() != null && response.body().isSuccess) {
+                            if (response.body() != null && response.body()!!.isSuccess) {
                                 Toast.makeText(this@HomeActivity, R.string.all_posts_read, Toast.LENGTH_SHORT).show()
                             } else {
                                 Toast.makeText(this@HomeActivity, R.string.all_posts_not_read, Toast.LENGTH_SHORT).show()
@@ -432,10 +428,10 @@ class HomeActivity : AppCompatActivity() {
             api!!.stats.enqueue(object : Callback<Stats> {
                 override fun onResponse(call: Call<Stats>, response: Response<Stats>) {
                     if (response.body() != null) {
-                        tabNew!!.setBadgeCount(response.body().unread)
+                        tabNew!!.setBadgeCount(response.body()!!.unread)
                         if (displayAllCount) {
-                            tabArchive!!.setBadgeCount(response.body().total)
-                            tabStarred!!.setBadgeCount(response.body().starred)
+                            tabArchive!!.setBadgeCount(response.body()!!.total)
+                            tabStarred!!.setBadgeCount(response.body()!!.starred)
                         } else {
                             tabArchive!!.removeBadge()
                             tabStarred!!.removeBadge()

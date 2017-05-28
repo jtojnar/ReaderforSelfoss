@@ -84,7 +84,7 @@ class SourcesListAdapter(private val app: Activity, private val items: ArrayList
                 val (id) = items[adapterPosition]
                 api.deleteSource(id).enqueue(object : Callback<SuccessResponse> {
                     override fun onResponse(call: Call<SuccessResponse>, response: Response<SuccessResponse>) {
-                        if (response.body() != null && response.body().isSuccess) {
+                        if (response.body() != null && response.body()!!.isSuccess) {
                             items.removeAt(adapterPosition)
                             notifyItemRemoved(adapterPosition)
                             notifyItemRangeChanged(adapterPosition, itemCount)

@@ -203,7 +203,7 @@ class LoginActivity : AppCompatActivity() {
                 }
 
                 override fun onResponse(call: Call<SuccessResponse>, response: Response<SuccessResponse>) {
-                    if (response.body() != null && response.body().isSuccess) {
+                    if (response.body() != null && response.body()!!.isSuccess) {
                         mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.LOGIN, Bundle())
                         goToMain()
                     } else {

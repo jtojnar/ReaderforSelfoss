@@ -6,11 +6,9 @@ import android.content.SharedPreferences
 import android.net.Uri
 import android.support.v7.app.AlertDialog
 import android.text.TextUtils
-import android.util.Log
 import android.util.Patterns
 import apps.amine.bou.readerforselfoss.BuildConfig
 import apps.amine.bou.readerforselfoss.R
-import com.google.firebase.crash.FirebaseCrash
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import okhttp3.HttpUrl
 
@@ -57,8 +55,6 @@ fun checkApkVersion(settings: SharedPreferences, editor: SharedPreferences.Edito
             if (task.isSuccessful) {
                 mFirebaseRemoteConfig.activateFetched()
             } else {
-                FirebaseCrash.logcat(Log.DEBUG, "CONFIG FETCH", "remote config task unsuccessful")
-                FirebaseCrash.report(Exception(task.exception))
             }
 
             isThereAnUpdate(settings, editor, context, mFirebaseRemoteConfig)

@@ -50,6 +50,9 @@
 -dontwarn retrofit2.Platform$Java8
 -keepattributes Signature
 -keepattributes Exceptions
+-dontwarn okio.**
+-dontwarn javax.annotation.Nullable
+-dontwarn javax.annotation.ParametersAreNonnullByDefault
 
 
 #Bottom bar lib

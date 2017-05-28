@@ -38,7 +38,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
                     'proguard-rules.pro'
         }
@@ -73,7 +73,6 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
     // Firebase + crashlytics
-    compile 'com.google.android.gms:play-services:10.2.6'
     compile 'com.google.firebase:firebase-core:10.2.6'
     compile 'com.google.firebase:firebase-config:10.2.6'
     compile 'com.google.firebase:firebase-invites:10.2.6'
@@ -93,9 +92,9 @@ dependencies {
     }
 
     // Retrofit + http logging + okhttp
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
-    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.8.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
     compile 'com.burgstaller:okhttp-digest:1.12'
 
     // Material-ish things

@@ -53,12 +53,12 @@ class ReaderActivity : DragDismissActivity() {
         parser.parseUrl(url).enqueue(object : Callback<ParsedContent> {
             override fun onResponse(call: Call<ParsedContent>, response: Response<ParsedContent>) {
                 if (response.body() != null) {
-                    source.text = response.body().domain
-                    title.text = response.body().title
-                    if (response.body().content != null && !response.body().content.isEmpty())
-                        content.setHtml(response.body().content, HtmlHttpImageGetter(content, null, true))
-                    if (response.body().lead_image_url != null && !response.body().lead_image_url.isEmpty())
-                        Glide.with(applicationContext).load(response.body().lead_image_url).asBitmap().fitCenter().into(image)
+                    source.text = response.body()!!.domain
+                    title.text = response.body()!!.title
+                    if (response.body()!!.content != null && !response.body()!!.content.isEmpty())
+                        content.setHtml(response.body()!!.content, HtmlHttpImageGetter(content, null, true))
+                    if (response.body()!!.lead_image_url != null && !response.body()!!.lead_image_url.isEmpty())
+                        Glide.with(applicationContext).load(response.body()!!.lead_image_url).asBitmap().fitCenter().into(image)
                     hideProgressBar()
                 } else {
                     errorAfterMercuryCall()
