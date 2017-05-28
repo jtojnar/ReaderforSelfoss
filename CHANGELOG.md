@@ -1,3 +1,9 @@
+**1.5..0.0**
+
+_New_
+
+- The app is now open source ! And rewritten in Kotlin !
+
 **1.4.0.9**
 
 _Fixes_
