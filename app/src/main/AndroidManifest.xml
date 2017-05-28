@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="bou.amine.apps.readerforselfoss">
+    package="apps.amine.bou.readerforselfoss">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -20,7 +20,46 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".IntroActivity"
+            android:theme="@style/Theme.Intro">
+        </activity>
+        <activity android:name=".LoginActivity"
+            android:label="@string/title_activity_login">
+        </activity>
+        <activity android:name=".HomeActivity">
+        </activity>
+        <activity
+            android:name=".settings.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".HomeActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="apps.amine.bou.readerforselfoss.HomeActivity" />
+        </activity>
+        <activity android:name=".SourcesActivity"
+            android:parentActivityName=".HomeActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".HomeActivity" />
+        </activity>
+        <activity android:name=".AddSourceActivity"
+            android:parentActivityName=".SourcesActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".SourcesActivity" />
 
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ReaderActivity"
+            android:theme="@style/DragDismissTheme">
+        </activity>
     </application>
 
 </manifest>

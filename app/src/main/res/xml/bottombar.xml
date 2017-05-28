@@ -1,0 +1,20 @@
+<tabs>
+    <tab
+        id="@+id/tab_new"
+        icon="@drawable/ic_fiber_new_black_24dp"
+        title="@string/tab_new"
+        barColorWhenSelected="@color/colorAccent" />
+
+    <tab
+        id="@+id/tab_archive"
+        icon="@drawable/ic_archive_black_24dp"
+        title="@string/tab_read"
+        barColorWhenSelected="@color/colorAccentDark"/>
+
+    <tab
+        id="@+id/tab_fav"
+        icon="@drawable/ic_favorite_black_24dp"
+        title="@string/tab_favs"
+        barColorWhenSelected="@color/pink"/>
+
+</tabs>

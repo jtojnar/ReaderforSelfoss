@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/readAll"
+          android:icon="@drawable/ic_done_all_white_24dp"
+          android:title="@string/readAll"
+          android:orderInCategory="1"
+          app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/refresh"
+        android:icon="@drawable/quantum_ic_refresh_white_24"
+        android:orderInCategory="99"
+        android:title="@string/menu_home_refresh"
+        app:showAsAction="ifRoom" />
+    <item android:id="@+id/action_settings"
+          android:title="@string/title_activity_settings"
+          android:orderInCategory="100"
+          app:showAsAction="never"/>
+
+    <item android:id="@+id/action_sources"
+          android:title="@string/action_source"
+          android:orderInCategory="101"
+          app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_share_the_app"
+        android:orderInCategory="102"
+        android:title="@string/menu_share_the_app" />
+    <item android:id="@+id/about"
+          android:title="@string/action_about"
+          android:orderInCategory="103"
+          app:showAsAction="never"/>
+
+    <item android:id="@+id/action_disconnect"
+          android:title="@string/action_disconnect"
+          android:orderInCategory="104"
+          app:showAsAction="never"/>
+</menu>

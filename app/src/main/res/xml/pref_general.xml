@@ -1,0 +1,64 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--<SwitchPreference
+        android:defaultValue="false"
+        android:key="preferred_browser"
+        android:summary="@string/pref_switch_browser"
+        android:title="@string/pref_switch_browser_title"/>-->
+
+    <PreferenceCategory
+        android:title="@string/pref_general_category_links">
+
+    </PreferenceCategory>
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="prefer_internal_browser"
+        android:summaryOff="@string/pref_general_internal_browser_off"
+        android:summaryOn="@string/pref_general_internal_browser_on"
+        android:title="@string/pref_general_internal_browser_title" />
+    <SwitchPreference
+        android:defaultValue="true"
+        android:dependency="prefer_internal_browser"
+        android:key="prefer_article_viewer"
+        android:summaryOff="@string/prefer_article_viewer_off"
+        android:summaryOn="@string/prefer_article_viewer_on"
+        android:title="@string/prefer_article_viewer_title" />
+    <PreferenceCategory
+        android:title="@string/pref_general_category_displaying">
+
+    </PreferenceCategory>
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="card_view_active"
+        android:summaryOff="@string/pref_switch_card_view_off"
+        android:summaryOn="@string/pref_switch_card_view_on"
+        android:title="@string/pref_switch_card_view_title" />
+    <SwitchPreference
+        android:defaultValue="false"
+        android:dependency="card_view_active"
+        android:key="full_height_cards"
+        android:summaryOff="@string/card_height_off"
+        android:summaryOn="@string/card_height_on"
+        android:title="@string/card_height_title" />
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="display_unread_count"
+        android:summaryOn="@string/switch_unread_count"
+        android:title="@string/switch_unread_count_title" />
+    <SwitchPreference
+        android:defaultValue="false"
+        android:dependency="display_unread_count"
+        android:key="display_other_count"
+        android:title="@string/display_all_counts_title" />
+    <PreferenceCategory
+        android:title="@string/pref_general_category_actions">
+
+    </PreferenceCategory>
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="tab_on_tap"
+        android:summaryOff="@string/pref_switch_actions_tap_off"
+        android:summaryOn="@string/pref_switch_actions_tap_on"
+        android:title="@string/pref_switch_actions_tap_title" />
+
+</PreferenceScreen>

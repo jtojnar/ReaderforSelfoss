@@ -17,7 +17,9 @@ You'll have to:
 - Define the following in `res/values/strings.xml` or create `res/values/secrets.xml`
 
     - mercury: A [Mercury](https://mercury.postlight.com/web-parser/) web parser api key for the internal browser
-
+    - feedback_email: An email to receive users  feedback.
+    - source_url: an url to the source code, used in the settings
+    - tracker_url: an url to the tracker, used in the settings
 
 ## Useful links
 
