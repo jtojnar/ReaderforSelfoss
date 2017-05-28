@@ -1,4 +1,8 @@
-**1.5..0.0**
+**1.5.0.1**
+
+- The release APK wasn't working at all.
+
+**1.5.0.0**
 
 _New_
 
