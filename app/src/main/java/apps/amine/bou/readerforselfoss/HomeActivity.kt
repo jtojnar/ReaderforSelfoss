@@ -55,7 +55,7 @@ class HomeActivity : AppCompatActivity() {
     private val REQUEST_INVITE_BYMAIL = 13232
     private var mRecyclerView: RecyclerView? = null
     private var api: SelfossApi? = null
-    private var items: List<Item>? = null
+    private var items: ArrayList<Item> = ArrayList()
     private var mCustomTabActivityHelper: CustomTabActivityHelper? = null
 
     private var clickBehavior = false
@@ -177,15 +177,15 @@ class HomeActivity : AppCompatActivity() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
                 try {
-                    val i = items!![viewHolder.adapterPosition]
-                    val position = items!!.indexOf(i)
+                    val i = items[viewHolder.adapterPosition]
+                    val position = items.indexOf(i)
 
                     if (shouldBeCardView) {
                         (mRecyclerView!!.adapter as ItemCardAdapter).removeItemAtIndex(position)
                     } else {
                         (mRecyclerView!!.adapter as ItemListAdapter).removeItemAtIndex(position)
                     }
-                    tabNew!!.setBadgeCount(items!!.size - 1)
+                    tabNew!!.setBadgeCount(items.size - 1)
 
                 } catch (e: IndexOutOfBoundsException) {
                     FirebaseCrash.logcat(Log.ERROR, "SWIPE ERROR", "Swipe index out of bound")
@@ -248,7 +248,7 @@ class HomeActivity : AppCompatActivity() {
         api!!.unreadItems.enqueue(object : Callback<List<Item>> {
             override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
                 if (response.body() != null && response.body().isNotEmpty()) {
-                    items = response.body()
+                    items = response.body() as ArrayList<Item>
                 } else {
                     items = ArrayList()
                 }
@@ -268,7 +268,7 @@ class HomeActivity : AppCompatActivity() {
         api!!.readItems.enqueue(object : Callback<List<Item>> {
             override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
                 if (response.body() != null && response.body().isNotEmpty()) {
-                    items = response.body()
+                    items = response.body() as ArrayList<Item>
                 } else {
                     items = ArrayList()
                 }
@@ -288,7 +288,7 @@ class HomeActivity : AppCompatActivity() {
         api!!.starredItems.enqueue(object : Callback<List<Item>> {
             override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
                 if (response.body() != null && response.body().isNotEmpty()) {
-                    items = response.body()
+                    items = response.body() as ArrayList<Item>
                 } else {
                     items = ArrayList()
                 }
@@ -308,14 +308,14 @@ class HomeActivity : AppCompatActivity() {
 
         val mAdapter: RecyclerView.Adapter<*>
         if (shouldBeCardView) {
-            mAdapter = ItemCardAdapter(this, items, api, mCustomTabActivityHelper, internalBrowser, articleViewer, fullHeightCards)
+            mAdapter = ItemCardAdapter(this, items, api!!, mCustomTabActivityHelper!!, internalBrowser, articleViewer, fullHeightCards)
         } else {
-            mAdapter = ItemListAdapter(this, items, api, mCustomTabActivityHelper, clickBehavior, internalBrowser, articleViewer)
+            mAdapter = ItemListAdapter(this, items, api!!, mCustomTabActivityHelper!!, clickBehavior, internalBrowser, articleViewer)
         }
         mRecyclerView!!.adapter = mAdapter
         mAdapter.notifyDataSetChanged()
 
-        if (items!!.isEmpty()) Toast.makeText(this@HomeActivity, R.string.nothing_here, Toast.LENGTH_SHORT).show()
+        if (items.isEmpty()) Toast.makeText(this@HomeActivity, R.string.nothing_here, Toast.LENGTH_SHORT).show()
 
         reloadBadges()
     }
@@ -356,7 +356,7 @@ class HomeActivity : AppCompatActivity() {
             R.id.readAll -> {
                 if (elementsShown == UNREAD_SHOWN) {
                     mSwipeRefreshLayout!!.isRefreshing = false
-                    val ids = items!!.map { it.id }
+                    val ids = items.map { it.id }
 
                     api!!.readAll(ids).enqueue(object : Callback<SuccessResponse> {
                         override fun onResponse(call: Call<SuccessResponse>, response: Response<SuccessResponse>) {

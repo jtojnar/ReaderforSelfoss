@@ -28,7 +28,7 @@ class SourcesActivity : AppCompatActivity() {
         val mRecyclerView = findViewById(R.id.activity_sources) as RecyclerView
         val mLayoutManager = LinearLayoutManager(this)
         val api = SelfossApi(this)
-        var items: List<Sources> = ArrayList()
+        var items: ArrayList<Sources> = ArrayList()
 
         mFab.attachToRecyclerView(mRecyclerView)
         mRecyclerView.setHasFixedSize(true)
@@ -37,7 +37,7 @@ class SourcesActivity : AppCompatActivity() {
         api.sources.enqueue(object : Callback<List<Sources>> {
             override fun onResponse(call: Call<List<Sources>>, response: Response<List<Sources>>) {
                 if (response.body() != null && response.body().isNotEmpty()) {
-                    items = response.body()
+                    items = response.body() as ArrayList<Sources>
                 }
                 val mAdapter = SourcesListAdapter(this@SourcesActivity, items, api)
                 mRecyclerView.adapter = mAdapter

@@ -104,7 +104,7 @@ class AddSourceActivity : AppCompatActivity() {
         if (title.isEmpty() || url.isEmpty() || mSpoutsValue == null || mSpoutsValue!!.isEmpty()) {
             Toast.makeText(this, R.string.form_not_complete, Toast.LENGTH_SHORT).show()
         } else {
-            api.createSource(title, url, mSpoutsValue, mTags.text.toString(), "").enqueue(object : Callback<SuccessResponse> {
+            api.createSource(title, url, mSpoutsValue!!, mTags.text.toString(), "").enqueue(object : Callback<SuccessResponse> {
                 override fun onResponse(call: Call<SuccessResponse>, response: Response<SuccessResponse>) {
                     if (response.body() != null && response.body().isSuccess) {
                         finish()

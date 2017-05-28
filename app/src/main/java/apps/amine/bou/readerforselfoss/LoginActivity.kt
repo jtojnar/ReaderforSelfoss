@@ -23,6 +23,7 @@ import apps.amine.bou.readerforselfoss.api.selfoss.SuccessResponse
 import apps.amine.bou.readerforselfoss.utils.Config
 import apps.amine.bou.readerforselfoss.utils.checkAndDisplayStoreApk
 import apps.amine.bou.readerforselfoss.utils.isUrlValid
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.LibsBuilder
 import retrofit2.Call
@@ -43,6 +44,8 @@ class LoginActivity : AppCompatActivity() {
     private var isWithLogin = false
     private var isWithHTTPLogin = false
     private var mLoginFormView: View? = null
+    private var  mFirebaseAnalytics: FirebaseAnalytics? = null
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,6 +63,7 @@ class LoginActivity : AppCompatActivity() {
         isWithHTTPLogin = false
         inValidCount = 0
 
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
         mUrlView = findViewById(R.id.url) as EditText
         mLoginView = findViewById(R.id.login) as TextView
         mHTTPLoginView = findViewById(R.id.httpLogin) as TextView
@@ -200,7 +204,8 @@ class LoginActivity : AppCompatActivity() {
 
                 override fun onResponse(call: Call<SuccessResponse>, response: Response<SuccessResponse>) {
                     if (response.body() != null && response.body().isSuccess) {
-                            goToMain()
+                        mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.LOGIN, Bundle())
+                        goToMain()
                     } else {
                         preferenceError()
                     }
