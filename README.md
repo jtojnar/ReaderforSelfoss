@@ -26,4 +26,3 @@ You'll have to:
 - [Check what changed](https://github.com/aminecmi/ReaderforSelfoss/blob/master/CHANGELOG.md)
 - [See what I'm doing](https://github.com/aminecmi/ReaderforSelfoss/projects/1)
 - [Create an issue, or request a new feature](https://github.com/aminecmi/ReaderforSelfoss/issues)
-- [Help me translate the app](https://poeditor.com/join/project/viHr8ujJ7S)
