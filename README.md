@@ -1,6 +1,6 @@
 # ReaderForSelfoss
 
-[![Build Status](https://travis-ci.org/aminecmi/ReaderforSelfoss.svg?branch=master)](https://travis-ci.org/aminecmi/ReaderforSelfoss)
+[![CircleCI](https://circleci.com/gh/aminecmi/ReaderforSelfoss.svg?style=svg)](https://circleci.com/gh/aminecmi/ReaderforSelfoss)
 
 This is the repo of [Reader For Selfoss](https://play.google.com/store/apps/details?id=apps.amine.bou.readerforselfoss&hl=en).
 
