@@ -1,5 +1,7 @@
 # ReaderForSelfoss
 
+[![Build Status](https://travis-ci.org/aminecmi/ReaderforSelfoss.svg?branch=master)](https://travis-ci.org/aminecmi/ReaderforSelfoss)
+
 This is the repo of [Reader For Selfoss](https://play.google.com/store/apps/details?id=apps.amine.bou.readerforselfoss&hl=en).
 
 It's an RSS Reader for Android, that **only** works with [Selfoss](https://selfoss.aditu.de/)
