@@ -1,6 +1,6 @@
 # ReaderForSelfoss
 
-[![CircleCI](https://circleci.com/gh/aminecmi/ReaderforSelfoss.svg?style=svg)](https://circleci.com/gh/aminecmi/ReaderforSelfoss)
+[![CircleCI](https://circleci.com/gh/aminecmi/ReaderforSelfoss/tree/master.svg?style=svg)](https://circleci.com/gh/aminecmi/ReaderforSelfoss/tree/master)
 
 This is the repo of [Reader For Selfoss](https://play.google.com/store/apps/details?id=apps.amine.bou.readerforselfoss&hl=en).
 
