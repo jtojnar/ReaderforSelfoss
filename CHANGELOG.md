@@ -1,3 +1,11 @@
+**1.5.0.2**
+
+- If the content in the article viewer is empty, the article will open in a custom tab.
+
+- Added a share button, and an "open in browser" button to the bottom of the article viewer.
+
+- Updated custom tab code.
+
 **1.5.0.1**
 
 - The release APK wasn't working at all.
