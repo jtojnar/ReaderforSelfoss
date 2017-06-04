@@ -103,4 +103,15 @@
     <string name="card_height_off" >La taille de la carte sera fixe</string>
     <string name="source_code">Code source</string>
     <string name="cant_mark_read">Kan het artikel niet als gelezen markeren</string>
+    <string name="drawer_error_loading_tags">Erreur lors du chargement des tags…</string>
+    <string name="drawer_error_loading_sources">Erreur lors du chargement des sources…</string>
+    <string name="drawer_item_filters">Filtres</string>
+    <string name="drawer_action_clear">raz</string>
+    <string name="drawer_item_tags">Tags</string>
+    <string name="drawer_item_sources">Sources</string>
+    <string name="drawer_action_edit">editer</string>
+    <string name="cache_drawer_error">Impossible de mettre en cache les filtres pour le drawer</string>
+    <string name="no_tags_loaded">Pas de tags chargés</string>
+    <string name="no_sources_loaded">Pas de sources chargés</string>
+    <string name="drawer_loading">Chargement …</string>
 </resources>

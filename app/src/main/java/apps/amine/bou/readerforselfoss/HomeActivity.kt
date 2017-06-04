@@ -19,7 +19,6 @@ import android.support.v7.widget.Toolbar
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import apps.amine.bou.readerforselfoss.adapters.ItemCardAdapter
 import apps.amine.bou.readerforselfoss.adapters.ItemListAdapter
@@ -49,7 +48,6 @@ import com.mikepenz.materialdrawer.DrawerBuilder
 import com.mikepenz.materialdrawer.model.DividerDrawerItem
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
-import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
 import com.roughike.bottombar.BottomBar
 import com.roughike.bottombar.BottomBarTab
 import retrofit2.Call
@@ -150,7 +148,7 @@ class HomeActivity : AppCompatActivity() {
             fun handleTags(maybeTags: List<Tag>?) {
                 if (maybeTags == null) {
                     if (loadedFromCache)
-                        drawer!!.addItem(PrimaryDrawerItem().withName("Error loading tags..."))
+                        drawer!!.addItem(PrimaryDrawerItem().withName(getString(R.string.drawer_error_loading_tags)))
                 }
                 else {
                     for (tag in maybeTags) {
@@ -177,7 +175,7 @@ class HomeActivity : AppCompatActivity() {
             fun handleSources(maybeSources: List<Sources>?) {
                 if (maybeSources == null) {
                     if (loadedFromCache)
-                        drawer!!.addItem(PrimaryDrawerItem().withName("Error loading sources..."))
+                        drawer!!.addItem(PrimaryDrawerItem().withName(getString(R.string.drawer_error_loading_sources)))
                 }
                 else
                     for (tag in maybeSources)
@@ -197,22 +195,22 @@ class HomeActivity : AppCompatActivity() {
             if (maybeDrawerData != null) {
                 drawer!!.addItem(
                     PrimaryDrawerItem()
-                        .withName("Filtres")
+                        .withName(getString(R.string.drawer_item_filters))
                         .withIdentifier(DRAWER_ID_FILTERS)
-                        .withBadge("clear")
+                        .withBadge(getString(R.string.drawer_action_clear))
                         .withOnDrawerItemClickListener { _, _, _ ->
                             getElementsAccordingToTab()
                             true
                         }
                 )
                 drawer!!.addItem(DividerDrawerItem())
-                drawer!!.addItem(PrimaryDrawerItem().withName("Tags").withIdentifier(DRAWER_ID_TAGS).withSelectable(false))
+                drawer!!.addItem(PrimaryDrawerItem().withName(getString(R.string.drawer_item_tags)).withIdentifier(DRAWER_ID_TAGS).withSelectable(false))
                 handleTags(maybeDrawerData.tags)
                 drawer!!.addItem(
                     PrimaryDrawerItem()
-                        .withName("Sources")
+                        .withName(getString(R.string.drawer_item_sources))
                         .withIdentifier(DRAWER_ID_TAGS)
-                        .withBadge("edit")
+                        .withBadge(getString(R.string.drawer_action_edit))
                         .withOnDrawerItemClickListener { _, _, _ ->
                             startActivity(Intent(this, SourcesActivity::class.java))
                             true
@@ -249,14 +247,14 @@ class HomeActivity : AppCompatActivity() {
                         override fun onSuccess() {}
 
                         override fun onFailure(p0: Exception?) {
-                            Toast.makeText(this@HomeActivity, "Couldn't cache your drawer data", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@HomeActivity, getString(R.string.cache_drawer_error), Toast.LENGTH_SHORT).show()
                         }
 
                     })
             } else {
                 if (!loadedFromCache) {
-                    drawer!!.addItem(SecondaryDrawerItem().withName("No tags loaded").withIdentifier(DRAWER_ID_TAGS).withSelectable(false))
-                    drawer!!.addItem(SecondaryDrawerItem().withName("No sources loaded").withIdentifier(DRAWER_ID_SOURCES).withSelectable(false))
+                    drawer!!.addItem(SecondaryDrawerItem().withName(getString(R.string.no_tags_loaded)).withIdentifier(DRAWER_ID_TAGS).withSelectable(false))
+                    drawer!!.addItem(SecondaryDrawerItem().withName(getString(R.string.no_sources_loaded)).withIdentifier(DRAWER_ID_SOURCES).withSelectable(false))
                 }
             }
 
@@ -295,7 +293,7 @@ class HomeActivity : AppCompatActivity() {
             })
         }
 
-        drawer!!.addItem(SecondaryDrawerItem().withName("Loading ...").withSelectable(false))
+        drawer!!.addItem(SecondaryDrawerItem().withName(getString(R.string.drawer_loading)).withSelectable(false))
 
         val resultType = object : TypeToken<DrawerData>() {}.type
         Reservoir.getAsync("drawerData", resultType, object: ReservoirGetCallback<DrawerData> {
