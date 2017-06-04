@@ -66,6 +66,7 @@ class HomeActivity : AppCompatActivity() {
     private val REQUEST_INVITE_BYMAIL = 13232
     private val DRAWER_ID_TAGS = 100101L
     private val DRAWER_ID_SOURCES = 100110L
+    private val DRAWER_ID_FILTERS = 100111L
     private var mRecyclerView: RecyclerView? = null
     private var api: SelfossApi? = null
     private var items: ArrayList<Item> = ArrayList()
@@ -159,7 +160,7 @@ class HomeActivity : AppCompatActivity() {
                         gd.setSize(30, 30)
                         gd.cornerRadius = 30F
                         drawer!!.addItem(
-                            PrimaryDrawerItem()
+                            SecondaryDrawerItem()
                                 .withName(tag.tag)
                                 .withIdentifier(longHash(tag.tag))
                                 .withIcon(gd)
@@ -181,24 +182,68 @@ class HomeActivity : AppCompatActivity() {
                 else
                     for (tag in maybeSources)
                         drawer!!.addItem(
-                            PrimaryDrawerItem()
-                                    .withName(tag.title)
-                                    .withIdentifier(tag.id.toLong())
-                                    .withOnDrawerItemClickListener { _, _, _ ->
-                                        getElementsAccordingToTab(maybeSourceFilter = tag)
-                                        true
-                                    }
+                            SecondaryDrawerItem()
+                                .withName(tag.title)
+                                .withIdentifier(tag.id.toLong())
+                                .withOnDrawerItemClickListener { _, _, _ ->
+                                    getElementsAccordingToTab(maybeSourceFilter = tag)
+                                    true
+                                }
                         )
 
             }
 
             drawer!!.removeAllItems()
             if (maybeDrawerData != null) {
-                drawer!!.addItem(SecondaryDrawerItem().withName("Tags").withIdentifier(DRAWER_ID_TAGS).withSelectable(false))
-                handleTags(maybeDrawerData.tags)
+                drawer!!.addItem(
+                    PrimaryDrawerItem()
+                        .withName("Filtres")
+                        .withIdentifier(DRAWER_ID_FILTERS)
+                        .withBadge("clear")
+                        .withOnDrawerItemClickListener { _, _, _ ->
+                            getElementsAccordingToTab()
+                            true
+                        }
+                )
                 drawer!!.addItem(DividerDrawerItem())
-                drawer!!.addItem(SecondaryDrawerItem().withName("Sources").withIdentifier(DRAWER_ID_TAGS).withSelectable(false))
+                drawer!!.addItem(PrimaryDrawerItem().withName("Tags").withIdentifier(DRAWER_ID_TAGS).withSelectable(false))
+                handleTags(maybeDrawerData.tags)
+                drawer!!.addItem(
+                    PrimaryDrawerItem()
+                        .withName("Sources")
+                        .withIdentifier(DRAWER_ID_TAGS)
+                        .withBadge("edit")
+                        .withOnDrawerItemClickListener { _, _, _ ->
+                            startActivity(Intent(this, SourcesActivity::class.java))
+                            true
+                        }
+                )
                 handleSources(maybeDrawerData.sources)
+
+
+                drawer!!.addItem(DividerDrawerItem())
+                drawer!!.addStickyFooterItem(
+                    PrimaryDrawerItem()
+                        .withName(R.string.action_about)
+                        .withIcon(R.drawable.ic_info_outline)
+                        .withOnDrawerItemClickListener { _, _, _ ->
+                            LibsBuilder()
+                                .withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR)
+                                .withAboutIconShown(true)
+                                .withAboutVersionShown(true)
+                                .start(this@HomeActivity)
+                            true
+                        })
+                drawer!!.addStickyFooterItem(
+                    PrimaryDrawerItem()
+                        .withName(R.string.title_activity_settings)
+                        .withIcon(R.drawable.ic_settings)
+                        .withOnDrawerItemClickListener { _, _, _ ->
+                            startActivityForResult(Intent(this@HomeActivity, SettingsActivity::class.java), MENU_PREFERENCES)
+                            true
+                        }
+                )
+
                 if (!loadedFromCache)
                     Reservoir.putAsync("drawerData", maybeDrawerData, object : ReservoirPutCallback {
                         override fun onSuccess() {}
@@ -542,24 +587,6 @@ class HomeActivity : AppCompatActivity() {
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
                 finish()
-                return true
-            }
-            R.id.action_sources -> {
-                val intent2 = Intent(this, SourcesActivity::class.java)
-                startActivity(intent2)
-                return true
-            }
-            R.id.action_settings -> {
-                val intent3 = Intent(this, SettingsActivity::class.java)
-                startActivityForResult(intent3, MENU_PREFERENCES)
-                return true
-            }
-            R.id.about -> {
-                LibsBuilder()
-                        .withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR)
-                        .withAboutIconShown(true)
-                        .withAboutVersionShown(true)
-                        .start(this)
                 return true
             }
             R.id.action_share_the_app -> {
