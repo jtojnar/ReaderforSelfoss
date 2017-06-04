@@ -1,6 +1,8 @@
-**1.5.0.3 and 1.5.0.4**
+**1.5.0.3 to 1.5.0.5**
 
 - Added a drawer for filtering sources and tags.
+
+- Fixes to the drawer.
 
 **1.5.0.2**
 

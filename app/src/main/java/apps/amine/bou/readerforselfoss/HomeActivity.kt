@@ -17,8 +17,10 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.support.v7.widget.Toolbar
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.util.DisplayMetrics
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import apps.amine.bou.readerforselfoss.adapters.ItemCardAdapter
 import apps.amine.bou.readerforselfoss.adapters.ItemListAdapter
@@ -133,13 +135,49 @@ class HomeActivity : AppCompatActivity() {
     fun handleDrawer() {
 
         drawer = DrawerBuilder()
-                .withActivity(this)
-                .withRootView(R.id.drawer_layout)
-                .withToolbar(toolbar!!)
-                .withActionBarDrawerToggle(true)
-                .withActionBarDrawerToggleAnimated(true)
-                .withShowDrawerOnFirstLaunch(true)
-                .build()
+            .withActivity(this)
+            .withRootView(R.id.drawer_layout)
+            .withToolbar(toolbar!!)
+            .withActionBarDrawerToggle(true)
+            .withActionBarDrawerToggleAnimated(true)
+            .withShowDrawerOnFirstLaunch(true)
+            .withOnDrawerListener(object: Drawer.OnDrawerListener {
+                override fun onDrawerSlide(p0: View?, p1: Float) {
+                    mBottomBar!!.alpha = (1 - p1)
+                }
+
+                override fun onDrawerClosed(p0: View?) {
+                    mBottomBar!!.shySettings.showBar()
+                }
+
+                override fun onDrawerOpened(p0: View?) {
+                    mBottomBar!!.shySettings.hideBar()
+                }
+
+            })
+            .build()
+
+        drawer!!.addStickyFooterItem(
+            PrimaryDrawerItem()
+                .withName(R.string.action_about)
+                .withIcon(R.drawable.ic_info_outline)
+                .withOnDrawerItemClickListener { _, _, _ ->
+                    LibsBuilder()
+                            .withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR)
+                            .withAboutIconShown(true)
+                            .withAboutVersionShown(true)
+                            .start(this@HomeActivity)
+                    false
+                })
+        drawer!!.addStickyFooterItem(
+            PrimaryDrawerItem()
+                .withName(R.string.title_activity_settings)
+                .withIcon(R.drawable.ic_settings)
+                .withOnDrawerItemClickListener { _, _, _ ->
+                    startActivityForResult(Intent(this@HomeActivity, SettingsActivity::class.java), MENU_PREFERENCES)
+                    false
+                }
+        )
 
     }
 
@@ -164,7 +202,7 @@ class HomeActivity : AppCompatActivity() {
                                 .withIcon(gd)
                                 .withOnDrawerItemClickListener { _, _, _ ->
                                     getElementsAccordingToTab(maybeTagFilter = tag)
-                                    true
+                                    false
                                 }
                         )
                     }
@@ -185,7 +223,7 @@ class HomeActivity : AppCompatActivity() {
                                 .withIdentifier(tag.id.toLong())
                                 .withOnDrawerItemClickListener { _, _, _ ->
                                     getElementsAccordingToTab(maybeSourceFilter = tag)
-                                    true
+                                    false
                                 }
                         )
 
@@ -200,7 +238,7 @@ class HomeActivity : AppCompatActivity() {
                         .withBadge(getString(R.string.drawer_action_clear))
                         .withOnDrawerItemClickListener { _, _, _ ->
                             getElementsAccordingToTab()
-                            true
+                            false
                         }
                 )
                 drawer!!.addItem(DividerDrawerItem())
@@ -213,34 +251,13 @@ class HomeActivity : AppCompatActivity() {
                         .withBadge(getString(R.string.drawer_action_edit))
                         .withOnDrawerItemClickListener { _, _, _ ->
                             startActivity(Intent(this, SourcesActivity::class.java))
-                            true
+                            false
                         }
                 )
                 handleSources(maybeDrawerData.sources)
 
 
                 drawer!!.addItem(DividerDrawerItem())
-                drawer!!.addStickyFooterItem(
-                    PrimaryDrawerItem()
-                        .withName(R.string.action_about)
-                        .withIcon(R.drawable.ic_info_outline)
-                        .withOnDrawerItemClickListener { _, _, _ ->
-                            LibsBuilder()
-                                .withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR)
-                                .withAboutIconShown(true)
-                                .withAboutVersionShown(true)
-                                .start(this@HomeActivity)
-                            true
-                        })
-                drawer!!.addStickyFooterItem(
-                    PrimaryDrawerItem()
-                        .withName(R.string.title_activity_settings)
-                        .withIcon(R.drawable.ic_settings)
-                        .withOnDrawerItemClickListener { _, _, _ ->
-                            startActivityForResult(Intent(this@HomeActivity, SettingsActivity::class.java), MENU_PREFERENCES)
-                            true
-                        }
-                )
 
                 if (!loadedFromCache)
                     Reservoir.putAsync("drawerData", maybeDrawerData, object : ReservoirPutCallback {
@@ -262,7 +279,7 @@ class HomeActivity : AppCompatActivity() {
 
         fun drawerApiCalls(maybeDrawerData: DrawerData?) {
             var tags: List<Tag>? = null
-            var sources: List<Sources>? = null
+            var sources: List<Sources>?
 
             fun sourcesApiCall() {
                 api!!.sources.enqueue(object: Callback<List<Sources>> {
