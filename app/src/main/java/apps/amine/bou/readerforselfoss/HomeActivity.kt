@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -13,21 +15,24 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
+import android.support.v7.widget.Toolbar
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import apps.amine.bou.readerforselfoss.adapters.ItemCardAdapter
 import apps.amine.bou.readerforselfoss.adapters.ItemListAdapter
-import apps.amine.bou.readerforselfoss.api.selfoss.Item
-import apps.amine.bou.readerforselfoss.api.selfoss.SelfossApi
-import apps.amine.bou.readerforselfoss.api.selfoss.Stats
-import apps.amine.bou.readerforselfoss.api.selfoss.SuccessResponse
+import apps.amine.bou.readerforselfoss.api.selfoss.*
 import apps.amine.bou.readerforselfoss.settings.SettingsActivity
 import apps.amine.bou.readerforselfoss.utils.Config
 import apps.amine.bou.readerforselfoss.utils.checkAndDisplayStoreApk
 import apps.amine.bou.readerforselfoss.utils.checkApkVersion
 import apps.amine.bou.readerforselfoss.utils.customtabs.CustomTabActivityHelper
+import apps.amine.bou.readerforselfoss.utils.longHash
+import com.anupcowkur.reservoir.Reservoir
+import com.anupcowkur.reservoir.ReservoirGetCallback
+import com.anupcowkur.reservoir.ReservoirPutCallback
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.InviteEvent
 import com.github.stkent.amplify.prompt.DefaultLayoutPromptView
@@ -36,13 +41,21 @@ import com.google.android.gms.appinvite.AppInviteInvitation
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.gson.reflect.TypeToken
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.LibsBuilder
+import com.mikepenz.materialdrawer.Drawer
+import com.mikepenz.materialdrawer.DrawerBuilder
+import com.mikepenz.materialdrawer.model.DividerDrawerItem
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
 import com.roughike.bottombar.BottomBar
 import com.roughike.bottombar.BottomBarTab
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
 
 
 class HomeActivity : AppCompatActivity() {
@@ -51,6 +64,8 @@ class HomeActivity : AppCompatActivity() {
     private val MENU_PREFERENCES = 12302
     private val REQUEST_INVITE = 13231
     private val REQUEST_INVITE_BYMAIL = 13232
+    private val DRAWER_ID_TAGS = 100101L
+    private val DRAWER_ID_SOURCES = 100110L
     private var mRecyclerView: RecyclerView? = null
     private var api: SelfossApi? = null
     private var items: ArrayList<Item> = ArrayList()
@@ -77,6 +92,10 @@ class HomeActivity : AppCompatActivity() {
     private var tabStarred: BottomBarTab? = null
     private var mFirebaseRemoteConfig: FirebaseRemoteConfig? = null
     private var fullHeightCards: Boolean = false
+    private var toolbar: Toolbar? = null
+    private var drawer: Drawer? = null
+
+    data class DrawerData(val tags: List<Tag>?, val sources: List<Sources>?)
 
     private fun handleSharedPrefs() {
         clickBehavior = this.sharedPref!!.getBoolean("tab_on_tap", false)
@@ -90,6 +109,8 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+
+        handleDrawerItems()
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
 
@@ -110,13 +131,150 @@ class HomeActivity : AppCompatActivity() {
         getElementsAccordingToTab()
     }
 
+    fun handleDrawer() {
+
+        drawer = DrawerBuilder()
+                .withActivity(this)
+                .withRootView(R.id.drawer_layout)
+                .withToolbar(toolbar!!)
+                .withActionBarDrawerToggle(true)
+                .withActionBarDrawerToggleAnimated(true)
+                .withShowDrawerOnFirstLaunch(true)
+                .build()
+
+    }
+
+    fun handleDrawerItems() {
+        fun handleDrawerData(maybeDrawerData: DrawerData?, loadedFromCache: Boolean = false) {
+            fun handleTags(maybeTags: List<Tag>?) {
+                if (maybeTags == null) {
+                    if (loadedFromCache)
+                        drawer!!.addItem(PrimaryDrawerItem().withName("Error loading tags..."))
+                }
+                else {
+                    for (tag in maybeTags) {
+                        val gd: GradientDrawable = GradientDrawable()
+                        gd.setColor(Color.parseColor(tag.color))
+                        gd.shape = GradientDrawable.RECTANGLE
+                        gd.setSize(30, 30)
+                        gd.cornerRadius = 30F
+                        drawer!!.addItem(
+                            PrimaryDrawerItem()
+                                .withName(tag.tag)
+                                .withIdentifier(longHash(tag.tag))
+                                .withIcon(gd)
+                                .withOnDrawerItemClickListener { _, _, _ ->
+                                    getElementsAccordingToTab(maybeTagFilter = tag)
+                                    true
+                                }
+                        )
+                    }
+                }
+
+            }
+
+            fun handleSources(maybeSources: List<Sources>?) {
+                if (maybeSources == null) {
+                    if (loadedFromCache)
+                        drawer!!.addItem(PrimaryDrawerItem().withName("Error loading sources..."))
+                }
+                else
+                    for (tag in maybeSources)
+                        drawer!!.addItem(
+                            PrimaryDrawerItem()
+                                    .withName(tag.title)
+                                    .withIdentifier(tag.id.toLong())
+                                    .withOnDrawerItemClickListener { _, _, _ ->
+                                        getElementsAccordingToTab(maybeSourceFilter = tag)
+                                        true
+                                    }
+                        )
+
+            }
+
+            drawer!!.removeAllItems()
+            if (maybeDrawerData != null) {
+                drawer!!.addItem(SecondaryDrawerItem().withName("Tags").withIdentifier(DRAWER_ID_TAGS).withSelectable(false))
+                handleTags(maybeDrawerData.tags)
+                drawer!!.addItem(DividerDrawerItem())
+                drawer!!.addItem(SecondaryDrawerItem().withName("Sources").withIdentifier(DRAWER_ID_TAGS).withSelectable(false))
+                handleSources(maybeDrawerData.sources)
+                if (!loadedFromCache)
+                    Reservoir.putAsync("drawerData", maybeDrawerData, object : ReservoirPutCallback {
+                        override fun onSuccess() {}
+
+                        override fun onFailure(p0: Exception?) {
+                            Toast.makeText(this@HomeActivity, "Couldn't cache your drawer data", Toast.LENGTH_SHORT).show()
+                        }
+
+                    })
+            } else {
+                if (!loadedFromCache) {
+                    drawer!!.addItem(SecondaryDrawerItem().withName("No tags loaded").withIdentifier(DRAWER_ID_TAGS).withSelectable(false))
+                    drawer!!.addItem(SecondaryDrawerItem().withName("No sources loaded").withIdentifier(DRAWER_ID_SOURCES).withSelectable(false))
+                }
+            }
+
+        }
+
+        fun drawerApiCalls(maybeDrawerData: DrawerData?) {
+            var tags: List<Tag>? = null
+            var sources: List<Sources>? = null
+
+            fun sourcesApiCall() {
+                api!!.sources.enqueue(object: Callback<List<Sources>> {
+                    override fun onResponse(call: Call<List<Sources>>?, response: Response<List<Sources>>) {
+                        sources = response.body()
+                        val apiDrawerData = DrawerData(tags, sources)
+                        if (maybeDrawerData == null || (maybeDrawerData != null && maybeDrawerData != apiDrawerData))
+                            handleDrawerData(apiDrawerData)
+                    }
+
+                    override fun onFailure(call: Call<List<Sources>>?, t: Throwable?) {
+
+                    }
+
+                })
+            }
+
+            api!!.tags.enqueue(object: Callback<List<Tag>> {
+                override fun onResponse(call: Call<List<Tag>>, response: Response<List<Tag>>) {
+                    tags = response.body()
+                    sourcesApiCall()
+                }
+
+                override fun onFailure(call: Call<List<Tag>>?, t: Throwable?) {
+                    sourcesApiCall()
+                }
+
+            })
+        }
+
+        drawer!!.addItem(SecondaryDrawerItem().withName("Loading ...").withSelectable(false))
+
+        val resultType = object : TypeToken<DrawerData>() {}.type
+        Reservoir.getAsync("drawerData", resultType, object: ReservoirGetCallback<DrawerData> {
+            override fun onSuccess(maybeDrawerData: DrawerData?) {
+                handleDrawerData(maybeDrawerData, loadedFromCache = true)
+                drawerApiCalls(maybeDrawerData)
+            }
+
+            override fun onFailure(p0: Exception?) {
+                drawerApiCalls(null)
+            }
+
+        })
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
+        toolbar = findViewById(R.id.toolbar) as Toolbar?
+        setSupportActionBar(toolbar)
+
         if (savedInstanceState == null) {
             val promptView = findViewById(R.id.prompt_view) as DefaultLayoutPromptView
-
             Amplify.getSharedInstance().promptIfReady(promptView)
         }
 
@@ -129,6 +287,8 @@ class HomeActivity : AppCompatActivity() {
         items = ArrayList()
 
         mBottomBar = findViewById(R.id.bottomBar) as BottomBar
+
+        handleDrawer()
 
         // TODO: clean this hack
         val listenerAlreadySet = booleanArrayOf(false)
@@ -228,20 +388,20 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun getElementsAccordingToTab() {
+    private fun getElementsAccordingToTab(maybeTagFilter: Tag? = null, maybeSourceFilter: Sources? = null) {
         items = ArrayList()
 
         when (elementsShown) {
-            UNREAD_SHOWN -> getUnRead()
-            READ_SHOWN -> getRead()
-            FAV_SHOWN -> getStarred()
-            else -> getUnRead()
+            UNREAD_SHOWN -> getUnRead(maybeTagFilter, maybeSourceFilter)
+            READ_SHOWN -> getRead(maybeTagFilter, maybeSourceFilter)
+            FAV_SHOWN -> getStarred(maybeTagFilter, maybeSourceFilter)
+            else -> getUnRead(maybeTagFilter, maybeSourceFilter)
         }
     }
 
-    private fun getUnRead() {
+    private fun getUnRead(maybeTagFilter: Tag? = null, maybeSourceFilter: Sources? = null) {
         elementsShown = UNREAD_SHOWN
-        api!!.unreadItems.enqueue(object : Callback<List<Item>> {
+        api!!.unreadItems(maybeTagFilter?.tag, maybeSourceFilter?.id?.toLong()).enqueue(object : Callback<List<Item>> {
             override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
                 if (response.body() != null && response.body()!!.isNotEmpty()) {
                     items = response.body() as ArrayList<Item>
@@ -259,9 +419,9 @@ class HomeActivity : AppCompatActivity() {
         })
     }
 
-    private fun getRead() {
+    private fun getRead(maybeTagFilter: Tag? = null, maybeSourceFilter: Sources? = null) {
         elementsShown = READ_SHOWN
-        api!!.readItems.enqueue(object : Callback<List<Item>> {
+        api!!.readItems(maybeTagFilter?.tag, maybeSourceFilter?.id?.toLong()).enqueue(object : Callback<List<Item>> {
             override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
                 if (response.body() != null && response.body()!!.isNotEmpty()) {
                     items = response.body() as ArrayList<Item>
@@ -279,9 +439,9 @@ class HomeActivity : AppCompatActivity() {
         })
     }
 
-    private fun getStarred() {
+    private fun getStarred(maybeTagFilter: Tag? = null, maybeSourceFilter: Sources? = null) {
         elementsShown = FAV_SHOWN
-        api!!.starredItems.enqueue(object : Callback<List<Item>> {
+        api!!.starredItems(maybeTagFilter?.tag, maybeSourceFilter?.id?.toLong()).enqueue(object : Callback<List<Item>> {
             override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
                 if (response.body() != null && response.body()!!.isNotEmpty()) {
                     items = response.body() as ArrayList<Item>

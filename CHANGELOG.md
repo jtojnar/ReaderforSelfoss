@@ -1,3 +1,7 @@
+**1.5.0.3**
+
+- Added a drawer for filtering sources and tags.
+
 **1.5.0.2**
 
 - If the content in the article viewer is empty, the article will open in a custom tab.

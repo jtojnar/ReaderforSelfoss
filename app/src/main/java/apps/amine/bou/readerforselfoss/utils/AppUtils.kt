@@ -86,3 +86,14 @@ private fun isThereAnUpdate(settings: SharedPreferences, editor: SharedPreferenc
     }
 
 }
+
+fun longHash(string: String): Long {
+    var h = 98764321261L
+    val l = string.length
+    val chars = string.toCharArray()
+
+    for (i in 0..l - 1) {
+        h = 31 * h + chars[i].toLong()
+    }
+    return h
+}

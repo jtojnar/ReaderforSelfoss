@@ -113,6 +113,12 @@ dependencies {
     // For the article reader
     compile 'com.klinkerapps:drag-dismiss-activity:1.4.0'
 
+    // Drawer
+    compile('com.mikepenz:materialdrawer:5.9.2@aar') {
+        transitive = true
+    }
+    compile 'com.anupcowkur:reservoir:3.1.0'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

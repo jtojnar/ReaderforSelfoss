@@ -16,7 +16,11 @@ internal interface SelfossService {
     fun loginToSelfoss(@Query("username") username: String, @Query("password") password: String): Call<SuccessResponse>
 
     @GET("items")
-    fun getItems(@Query("type") type: String, @Query("username") username: String, @Query("password") password: String): Call<List<Item>>
+    fun getItems(@Query("type") type: String,
+                 @Query("tag") tag: String?,
+                 @Query("source") source: Long?,
+                 @Query("username") username: String,
+                 @Query("password") password: String): Call<List<Item>>
 
     @POST("mark/{id}")
     fun markAsRead(@Path("id") id: String, @Query("username") username: String, @Query("password") password: String): Call<SuccessResponse>

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="apps.amine.bou.readerforselfoss.HomeActivity"
+    android:fitsSystemWindows="true"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.github.stkent.amplify.prompt.DefaultLayoutPromptView
@@ -34,22 +35,55 @@
         android:layout_height="match_parent"
         android:layout_below="@id/prompt_view">
 
-
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipeRefreshLayout"
+        <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/intern_coordLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/my_recycler_view"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/background_grey"
-                android:clipToPadding="false"
-                android:scrollbars="vertical"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-        </android.support.v4.widget.SwipeRefreshLayout>
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
+                <android.support.design.widget.AppBarLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <android.support.v7.widget.Toolbar
+                        android:id="@+id/toolbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="?attr/actionBarSize"
+                        app:theme="@style/ToolBarStyle"
+                        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+                </android.support.design.widget.AppBarLayout>
+
+                <FrameLayout
+                    android:id="@+id/drawer_layout"
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <android.support.v4.widget.SwipeRefreshLayout
+                        android:id="@+id/swipeRefreshLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/my_recycler_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/background_grey"
+                            android:clipToPadding="false"
+                            android:scrollbars="vertical"
+                            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+                    </android.support.v4.widget.SwipeRefreshLayout>
+
+                </FrameLayout>
+            </LinearLayout>
+
+        </android.support.design.widget.CoordinatorLayout>
         <com.roughike.bottombar.BottomBar
             android:id="@+id/bottomBar"
             android:layout_width="match_parent"
@@ -62,6 +96,5 @@
             app:bb_badgeBackgroundColor="@color/colorPrimary"
             app:bb_inActiveTabColor="@color/black"
             app:bb_badgesHideWhenActive="false" />
-
     </android.support.design.widget.CoordinatorLayout>
 </RelativeLayout>
