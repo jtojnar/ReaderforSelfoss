@@ -160,6 +160,7 @@ class HomeActivity : AppCompatActivity() {
         drawer!!.addStickyFooterItem(
             PrimaryDrawerItem()
                 .withName(R.string.action_about)
+                .withSelectable(false)
                 .withIcon(R.drawable.ic_info_outline)
                 .withOnDrawerItemClickListener { _, _, _ ->
                     LibsBuilder()
@@ -167,7 +168,7 @@ class HomeActivity : AppCompatActivity() {
                             .withAboutIconShown(true)
                             .withAboutVersionShown(true)
                             .start(this@HomeActivity)
-                    true
+                    false
                 })
         drawer!!.addStickyFooterItem(
             PrimaryDrawerItem()
@@ -175,7 +176,7 @@ class HomeActivity : AppCompatActivity() {
                 .withIcon(R.drawable.ic_settings)
                 .withOnDrawerItemClickListener { _, _, _ ->
                     startActivityForResult(Intent(this@HomeActivity, SettingsActivity::class.java), MENU_PREFERENCES)
-                    true
+                    false
                 }
         )
 
@@ -654,7 +655,10 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onActivityResult(req: Int, result: Int, data: Intent?) {
         when (req) {
-            MENU_PREFERENCES -> recreate()
+            MENU_PREFERENCES -> {
+                drawer!!.closeDrawer()
+                recreate()
+            }
             REQUEST_INVITE -> if (result == Activity.RESULT_OK) {
                 Answers.getInstance().logInvite(InviteEvent())
             }
