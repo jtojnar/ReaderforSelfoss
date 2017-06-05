@@ -167,7 +167,7 @@ class HomeActivity : AppCompatActivity() {
                             .withAboutIconShown(true)
                             .withAboutVersionShown(true)
                             .start(this@HomeActivity)
-                    false
+                    true
                 })
         drawer!!.addStickyFooterItem(
             PrimaryDrawerItem()
@@ -175,7 +175,7 @@ class HomeActivity : AppCompatActivity() {
                 .withIcon(R.drawable.ic_settings)
                 .withOnDrawerItemClickListener { _, _, _ ->
                     startActivityForResult(Intent(this@HomeActivity, SettingsActivity::class.java), MENU_PREFERENCES)
-                    false
+                    true
                 }
         )
 
@@ -186,7 +186,7 @@ class HomeActivity : AppCompatActivity() {
             fun handleTags(maybeTags: List<Tag>?) {
                 if (maybeTags == null) {
                     if (loadedFromCache)
-                        drawer!!.addItem(PrimaryDrawerItem().withName(getString(R.string.drawer_error_loading_tags)))
+                        drawer!!.addItem(PrimaryDrawerItem().withName(getString(R.string.drawer_error_loading_tags)).withSelectable(false))
                 }
                 else {
                     for (tag in maybeTags) {
@@ -213,7 +213,7 @@ class HomeActivity : AppCompatActivity() {
             fun handleSources(maybeSources: List<Sources>?) {
                 if (maybeSources == null) {
                     if (loadedFromCache)
-                        drawer!!.addItem(PrimaryDrawerItem().withName(getString(R.string.drawer_error_loading_sources)))
+                        drawer!!.addItem(PrimaryDrawerItem().withName(getString(R.string.drawer_error_loading_sources)).withSelectable(false))
                 }
                 else
                     for (tag in maybeSources)
@@ -234,6 +234,7 @@ class HomeActivity : AppCompatActivity() {
                 drawer!!.addItem(
                     PrimaryDrawerItem()
                         .withName(getString(R.string.drawer_item_filters))
+                        .withSelectable(false)
                         .withIdentifier(DRAWER_ID_FILTERS)
                         .withBadge(getString(R.string.drawer_action_clear))
                         .withOnDrawerItemClickListener { _, _, _ ->
@@ -249,6 +250,7 @@ class HomeActivity : AppCompatActivity() {
                         .withName(getString(R.string.drawer_item_sources))
                         .withIdentifier(DRAWER_ID_TAGS)
                         .withBadge(getString(R.string.drawer_action_edit))
+                        .withSelectable(false)
                         .withOnDrawerItemClickListener { _, _, _ ->
                             startActivity(Intent(this, SourcesActivity::class.java))
                             false
@@ -256,8 +258,6 @@ class HomeActivity : AppCompatActivity() {
                 )
                 handleSources(maybeDrawerData.sources)
 
-
-                drawer!!.addItem(DividerDrawerItem())
 
                 if (!loadedFromCache)
                     Reservoir.putAsync("drawerData", maybeDrawerData, object : ReservoirPutCallback {

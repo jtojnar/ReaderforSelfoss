@@ -1,4 +1,4 @@
-**1.5.0.3 to 1.5.0.5**
+**1.5.0.3 to 1.5.0.6**
 
 - Added a drawer for filtering sources and tags.
 
