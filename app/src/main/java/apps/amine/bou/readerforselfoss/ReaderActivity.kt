@@ -56,7 +56,7 @@ class ReaderActivity : DragDismissActivity() {
 
         parser.parseUrl(url).enqueue(object : Callback<ParsedContent> {
             override fun onResponse(call: Call<ParsedContent>, response: Response<ParsedContent>) {
-                if (response.body() != null && response.body()!!.content.isNotEmpty()) {
+                if (response.body() != null && response.body()!!.content != null && response.body()!!.content.isNotEmpty()) {
                     source.text = response.body()!!.domain
                     title.text = response.body()!!.title
                     if (response.body()!!.content != null && !response.body()!!.content.isEmpty())
