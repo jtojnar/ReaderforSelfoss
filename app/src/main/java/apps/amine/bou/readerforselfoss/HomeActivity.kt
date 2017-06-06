@@ -52,6 +52,7 @@ import com.mikepenz.aboutlibraries.LibsBuilder
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.materialdrawer.Drawer
 import com.mikepenz.materialdrawer.DrawerBuilder
+import com.mikepenz.materialdrawer.holder.BadgeStyle
 import com.mikepenz.materialdrawer.model.DividerDrawerItem
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
@@ -208,6 +209,11 @@ class HomeActivity : AppCompatActivity() {
                                 .withName(tag.tag)
                                 .withIdentifier(longHash(tag.tag))
                                 .withIcon(gd)
+                                .withBadge("${tag.unread}")
+                                .withBadgeStyle(
+                                    BadgeStyle().withTextColor(Color.WHITE)
+                                        .withColorRes(R.color.colorAccent)
+                                )
                                 .withOnDrawerItemClickListener { _, _, _ ->
                                     getElementsAccordingToTab(maybeTagFilter = tag)
                                     false

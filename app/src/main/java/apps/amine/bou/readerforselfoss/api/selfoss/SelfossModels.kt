@@ -17,7 +17,7 @@ private fun constructUrl(config: Config?, path: String, file: String): String {
 }
 
 
-data class Tag(val tag: String, val color: String)
+data class Tag(val tag: String, val color: String, val unread: Int)
 
 class SuccessResponse(val success: Boolean) {
     val isSuccess: Boolean
