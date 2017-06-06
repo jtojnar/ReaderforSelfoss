@@ -279,7 +279,6 @@ class HomeActivity : AppCompatActivity() {
                         override fun onSuccess() {}
 
                         override fun onFailure(p0: Exception?) {
-                            Toast.makeText(this@HomeActivity, getString(R.string.cache_drawer_error), Toast.LENGTH_SHORT).show()
                         }
 
                     })

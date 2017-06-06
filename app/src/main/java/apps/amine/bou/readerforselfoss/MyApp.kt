@@ -28,7 +28,7 @@ class MyApp : MultiDexApplication() {
                 .applyAllDefaultRules()
 
         try {
-            Reservoir.init(this, 4096) //in bytes
+            Reservoir.init(this, 8192) //in bytes
         } catch (e: IOException) {
             //failure
         }
