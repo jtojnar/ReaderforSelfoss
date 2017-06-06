@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -21,6 +22,7 @@ import android.util.DisplayMetrics
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
 import apps.amine.bou.readerforselfoss.adapters.ItemCardAdapter
 import apps.amine.bou.readerforselfoss.adapters.ItemListAdapter
@@ -30,10 +32,12 @@ import apps.amine.bou.readerforselfoss.utils.Config
 import apps.amine.bou.readerforselfoss.utils.checkAndDisplayStoreApk
 import apps.amine.bou.readerforselfoss.utils.checkApkVersion
 import apps.amine.bou.readerforselfoss.utils.customtabs.CustomTabActivityHelper
+import apps.amine.bou.readerforselfoss.utils.drawer.CustomUrlPrimaryDrawerItem
 import apps.amine.bou.readerforselfoss.utils.longHash
 import com.anupcowkur.reservoir.Reservoir
 import com.anupcowkur.reservoir.ReservoirGetCallback
 import com.anupcowkur.reservoir.ReservoirPutCallback
+import com.bumptech.glide.Glide
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.InviteEvent
 import com.github.stkent.amplify.prompt.DefaultLayoutPromptView
@@ -45,11 +49,14 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.gson.reflect.TypeToken
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.LibsBuilder
+import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.materialdrawer.Drawer
 import com.mikepenz.materialdrawer.DrawerBuilder
 import com.mikepenz.materialdrawer.model.DividerDrawerItem
-import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
+import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader
+import com.mikepenz.materialdrawer.util.DrawerImageLoader
 import com.roughike.bottombar.BottomBar
 import com.roughike.bottombar.BottomBarTab
 import retrofit2.Call
@@ -187,7 +194,7 @@ class HomeActivity : AppCompatActivity() {
             fun handleTags(maybeTags: List<Tag>?) {
                 if (maybeTags == null) {
                     if (loadedFromCache)
-                        drawer!!.addItem(PrimaryDrawerItem().withName(getString(R.string.drawer_error_loading_tags)).withSelectable(false))
+                        drawer!!.addItem(SecondaryDrawerItem().withName(getString(R.string.drawer_error_loading_tags)).withSelectable(false))
                 }
                 else {
                     for (tag in maybeTags) {
@@ -197,7 +204,7 @@ class HomeActivity : AppCompatActivity() {
                         gd.setSize(30, 30)
                         gd.cornerRadius = 30F
                         drawer!!.addItem(
-                            SecondaryDrawerItem()
+                            PrimaryDrawerItem()
                                 .withName(tag.tag)
                                 .withIdentifier(longHash(tag.tag))
                                 .withIcon(gd)
@@ -214,14 +221,15 @@ class HomeActivity : AppCompatActivity() {
             fun handleSources(maybeSources: List<Sources>?) {
                 if (maybeSources == null) {
                     if (loadedFromCache)
-                        drawer!!.addItem(PrimaryDrawerItem().withName(getString(R.string.drawer_error_loading_sources)).withSelectable(false))
+                        drawer!!.addItem(SecondaryDrawerItem().withName(getString(R.string.drawer_error_loading_sources)).withSelectable(false))
                 }
                 else
                     for (tag in maybeSources)
                         drawer!!.addItem(
-                            SecondaryDrawerItem()
+                            CustomUrlPrimaryDrawerItem()
                                 .withName(tag.title)
                                 .withIdentifier(tag.id.toLong())
+                                .withIcon(tag.getIcon(this@HomeActivity))
                                 .withOnDrawerItemClickListener { _, _, _ ->
                                     getElementsAccordingToTab(maybeSourceFilter = tag)
                                     false
@@ -233,7 +241,7 @@ class HomeActivity : AppCompatActivity() {
             drawer!!.removeAllItems()
             if (maybeDrawerData != null) {
                 drawer!!.addItem(
-                    PrimaryDrawerItem()
+                    SecondaryDrawerItem()
                         .withName(getString(R.string.drawer_item_filters))
                         .withSelectable(false)
                         .withIdentifier(DRAWER_ID_FILTERS)
@@ -244,10 +252,10 @@ class HomeActivity : AppCompatActivity() {
                         }
                 )
                 drawer!!.addItem(DividerDrawerItem())
-                drawer!!.addItem(PrimaryDrawerItem().withName(getString(R.string.drawer_item_tags)).withIdentifier(DRAWER_ID_TAGS).withSelectable(false))
+                drawer!!.addItem(SecondaryDrawerItem().withName(getString(R.string.drawer_item_tags)).withIdentifier(DRAWER_ID_TAGS).withSelectable(false))
                 handleTags(maybeDrawerData.tags)
                 drawer!!.addItem(
-                    PrimaryDrawerItem()
+                    SecondaryDrawerItem()
                         .withName(getString(R.string.drawer_item_sources))
                         .withIdentifier(DRAWER_ID_TAGS)
                         .withBadge(getString(R.string.drawer_action_edit))
@@ -271,8 +279,8 @@ class HomeActivity : AppCompatActivity() {
                     })
             } else {
                 if (!loadedFromCache) {
-                    drawer!!.addItem(SecondaryDrawerItem().withName(getString(R.string.no_tags_loaded)).withIdentifier(DRAWER_ID_TAGS).withSelectable(false))
-                    drawer!!.addItem(SecondaryDrawerItem().withName(getString(R.string.no_sources_loaded)).withIdentifier(DRAWER_ID_SOURCES).withSelectable(false))
+                    drawer!!.addItem(PrimaryDrawerItem().withName(getString(R.string.no_tags_loaded)).withIdentifier(DRAWER_ID_TAGS).withSelectable(false))
+                    drawer!!.addItem(PrimaryDrawerItem().withName(getString(R.string.no_sources_loaded)).withIdentifier(DRAWER_ID_SOURCES).withSelectable(false))
                 }
             }
 
@@ -311,7 +319,7 @@ class HomeActivity : AppCompatActivity() {
             })
         }
 
-        drawer!!.addItem(SecondaryDrawerItem().withName(getString(R.string.drawer_loading)).withSelectable(false))
+        drawer!!.addItem(PrimaryDrawerItem().withName(getString(R.string.drawer_loading)).withSelectable(false))
 
         val resultType = object : TypeToken<DrawerData>() {}.type
         Reservoir.getAsync("drawerData", resultType, object: ReservoirGetCallback<DrawerData> {
