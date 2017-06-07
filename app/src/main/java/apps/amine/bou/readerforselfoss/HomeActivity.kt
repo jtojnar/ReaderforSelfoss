@@ -463,7 +463,6 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun getElementsAccordingToTab(maybeTagFilter: Tag? = null, maybeSourceFilter: Sources? = null) {
-        items = ArrayList()
 
         when (elementsShown) {
             UNREAD_SHOWN -> getUnRead(maybeTagFilter, maybeSourceFilter)
@@ -477,13 +476,7 @@ class HomeActivity : AppCompatActivity() {
         elementsShown = UNREAD_SHOWN
         api!!.unreadItems(maybeTagFilter?.tag, maybeSourceFilter?.id?.toLong()).enqueue(object : Callback<List<Item>> {
             override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
-                if (response.body() != null && response.body()!!.isNotEmpty()) {
-                    items = response.body() as ArrayList<Item>
-                } else {
-                    items = ArrayList()
-                }
-                handleListResult()
-                mSwipeRefreshLayout!!.isRefreshing = false
+                handleItemsResponse(response)
             }
 
             override fun onFailure(call: Call<List<Item>>, t: Throwable) {
@@ -493,17 +486,26 @@ class HomeActivity : AppCompatActivity() {
         })
     }
 
+    private fun handleItemsResponse(response: Response<List<Item>>) {
+        val didUpdate = (response.body() != items)
+        if (response.body() != null) {
+            if (response.body() != items) {
+                items = response.body() as ArrayList<Item>
+            }
+        } else {
+            items = ArrayList()
+        }
+        if (didUpdate)
+            handleListResult()
+        if (items.isEmpty()) Toast.makeText(this@HomeActivity, R.string.nothing_here, Toast.LENGTH_SHORT).show()
+        mSwipeRefreshLayout!!.isRefreshing = false
+    }
+
     private fun getRead(maybeTagFilter: Tag? = null, maybeSourceFilter: Sources? = null) {
         elementsShown = READ_SHOWN
         api!!.readItems(maybeTagFilter?.tag, maybeSourceFilter?.id?.toLong()).enqueue(object : Callback<List<Item>> {
             override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
-                if (response.body() != null && response.body()!!.isNotEmpty()) {
-                    items = response.body() as ArrayList<Item>
-                } else {
-                    items = ArrayList()
-                }
-                handleListResult()
-                mSwipeRefreshLayout!!.isRefreshing = false
+                handleItemsResponse(response)
             }
 
             override fun onFailure(call: Call<List<Item>>, t: Throwable) {
@@ -517,13 +519,7 @@ class HomeActivity : AppCompatActivity() {
         elementsShown = FAV_SHOWN
         api!!.starredItems(maybeTagFilter?.tag, maybeSourceFilter?.id?.toLong()).enqueue(object : Callback<List<Item>> {
             override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
-                if (response.body() != null && response.body()!!.isNotEmpty()) {
-                    items = response.body() as ArrayList<Item>
-                } else {
-                    items = ArrayList()
-                }
-                handleListResult()
-                mSwipeRefreshLayout!!.isRefreshing = false
+                handleItemsResponse(response)
             }
 
             override fun onFailure(call: Call<List<Item>>, t: Throwable) {
@@ -544,8 +540,6 @@ class HomeActivity : AppCompatActivity() {
         }
         mRecyclerView!!.adapter = mAdapter
         mAdapter.notifyDataSetChanged()
-
-        if (items.isEmpty()) Toast.makeText(this@HomeActivity, R.string.nothing_here, Toast.LENGTH_SHORT).show()
 
         reloadBadges()
     }
@@ -604,6 +598,7 @@ class HomeActivity : AppCompatActivity() {
                         }
                     })
                     items = ArrayList()
+                    if (items.isEmpty()) Toast.makeText(this@HomeActivity, R.string.nothing_here, Toast.LENGTH_SHORT).show()
                     handleListResult()
                 }
                 return true
