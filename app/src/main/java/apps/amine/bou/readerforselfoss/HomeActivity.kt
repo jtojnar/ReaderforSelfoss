@@ -103,6 +103,8 @@ class HomeActivity : AppCompatActivity() {
     private var fullHeightCards: Boolean = false
     private var toolbar: Toolbar? = null
     private var drawer: Drawer? = null
+    private var maybeTagFilter: Tag? = null
+    private var maybeSourceFilter: Sources? = null
 
     data class DrawerData(val tags: List<Tag>?, val sources: List<Sources>?)
 
@@ -215,7 +217,8 @@ class HomeActivity : AppCompatActivity() {
                                         .withColorRes(R.color.colorAccent)
                                 )
                                 .withOnDrawerItemClickListener { _, _, _ ->
-                                    getElementsAccordingToTab(maybeTagFilter = tag)
+                                    maybeTagFilter = tag
+                                    getElementsAccordingToTab()
                                     false
                                 }
                         )
@@ -237,7 +240,8 @@ class HomeActivity : AppCompatActivity() {
                                 .withIdentifier(tag.id.toLong())
                                 .withIcon(tag.getIcon(this@HomeActivity))
                                 .withOnDrawerItemClickListener { _, _, _ ->
-                                    getElementsAccordingToTab(maybeSourceFilter = tag)
+                                    maybeSourceFilter = tag
+                                    getElementsAccordingToTab()
                                     false
                                 }
                         )
@@ -253,6 +257,8 @@ class HomeActivity : AppCompatActivity() {
                         .withIdentifier(DRAWER_ID_FILTERS)
                         .withBadge(getString(R.string.drawer_action_clear))
                         .withOnDrawerItemClickListener { _, _, _ ->
+                            maybeSourceFilter = null
+                            maybeTagFilter = null
                             getElementsAccordingToTab()
                             false
                         }
@@ -462,7 +468,7 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun getElementsAccordingToTab(maybeTagFilter: Tag? = null, maybeSourceFilter: Sources? = null) {
+    private fun getElementsAccordingToTab() {
 
         when (elementsShown) {
             UNREAD_SHOWN -> getUnRead(maybeTagFilter, maybeSourceFilter)
