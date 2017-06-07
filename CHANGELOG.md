@@ -1,8 +1,8 @@
-**1.5.0.3 to 1.5.0.9**
+**1.5.1**
 
 - Added a drawer for filtering sources and tags.
 
-- Fixes to the drawer.
+- You can now search for items from the toolbar.
 
 **1.5.0.2**
 

@@ -72,17 +72,17 @@ class SelfossApi(c: Context) {
         return service.loginToSelfoss(config.userLogin, config.userPassword)
     }
 
-    fun readItems(tag: String?, sourceId: Long?): Call<List<Item>> =
-        getItems("read", tag, sourceId)
+    fun readItems(tag: String?, sourceId: Long?, search: String?): Call<List<Item>> =
+        getItems("read", tag, sourceId, search)
 
-    fun unreadItems(tag: String?, sourceId: Long?): Call<List<Item>> =
-        getItems("unread", tag, sourceId)
+    fun unreadItems(tag: String?, sourceId: Long?, search: String?): Call<List<Item>> =
+        getItems("unread", tag, sourceId, search)
 
-    fun starredItems(tag: String?, sourceId: Long?): Call<List<Item>> =
-        getItems("starred", tag, sourceId)
+    fun starredItems(tag: String?, sourceId: Long?, search: String?): Call<List<Item>> =
+        getItems("starred", tag, sourceId, search)
 
-    private fun getItems(type: String, tag: String?, sourceId: Long?): Call<List<Item>> {
-        return service.getItems(type, tag, sourceId, userName, password)
+    private fun getItems(type: String, tag: String?, sourceId: Long?, search: String?): Call<List<Item>> {
+        return service.getItems(type, tag, sourceId, search, userName, password)
     }
 
     fun markItem(itemId: String): Call<SuccessResponse> {

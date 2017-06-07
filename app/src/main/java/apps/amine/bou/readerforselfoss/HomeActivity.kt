@@ -5,24 +5,19 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.design.widget.CoordinatorLayout
+import android.support.v4.view.MenuItemCompat
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.StaggeredGridLayoutManager
-import android.support.v7.widget.Toolbar
+import android.support.v7.widget.*
 import android.support.v7.widget.helper.ItemTouchHelper
-import android.util.DisplayMetrics
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.ImageView
 import android.widget.Toast
 import apps.amine.bou.readerforselfoss.adapters.ItemCardAdapter
 import apps.amine.bou.readerforselfoss.adapters.ItemListAdapter
@@ -37,7 +32,6 @@ import apps.amine.bou.readerforselfoss.utils.longHash
 import com.anupcowkur.reservoir.Reservoir
 import com.anupcowkur.reservoir.ReservoirGetCallback
 import com.anupcowkur.reservoir.ReservoirPutCallback
-import com.bumptech.glide.Glide
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.InviteEvent
 import com.github.stkent.amplify.prompt.DefaultLayoutPromptView
@@ -49,15 +43,12 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.gson.reflect.TypeToken
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.LibsBuilder
-import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.materialdrawer.Drawer
 import com.mikepenz.materialdrawer.DrawerBuilder
 import com.mikepenz.materialdrawer.holder.BadgeStyle
 import com.mikepenz.materialdrawer.model.DividerDrawerItem
-import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
-import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader
-import com.mikepenz.materialdrawer.util.DrawerImageLoader
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
 import com.roughike.bottombar.BottomBar
 import com.roughike.bottombar.BottomBarTab
 import retrofit2.Call
@@ -65,9 +56,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.lang.Exception
 
-
-class HomeActivity : AppCompatActivity() {
-
+class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
     private val MENU_PREFERENCES = 12302
     private val REQUEST_INVITE = 13231
@@ -105,6 +94,7 @@ class HomeActivity : AppCompatActivity() {
     private var drawer: Drawer? = null
     private var maybeTagFilter: Tag? = null
     private var maybeSourceFilter: Sources? = null
+    private var maybeSearchFilter: String? = null
 
     data class DrawerData(val tags: List<Tag>?, val sources: List<Sources>?)
 
@@ -471,16 +461,16 @@ class HomeActivity : AppCompatActivity() {
     private fun getElementsAccordingToTab() {
 
         when (elementsShown) {
-            UNREAD_SHOWN -> getUnRead(maybeTagFilter, maybeSourceFilter)
-            READ_SHOWN -> getRead(maybeTagFilter, maybeSourceFilter)
-            FAV_SHOWN -> getStarred(maybeTagFilter, maybeSourceFilter)
-            else -> getUnRead(maybeTagFilter, maybeSourceFilter)
+            UNREAD_SHOWN -> getUnRead()
+            READ_SHOWN -> getRead()
+            FAV_SHOWN -> getStarred()
+            else -> getUnRead()
         }
     }
 
-    private fun getUnRead(maybeTagFilter: Tag? = null, maybeSourceFilter: Sources? = null) {
+    private fun getUnRead() {
         elementsShown = UNREAD_SHOWN
-        api!!.unreadItems(maybeTagFilter?.tag, maybeSourceFilter?.id?.toLong()).enqueue(object : Callback<List<Item>> {
+        api!!.unreadItems(maybeTagFilter?.tag, maybeSourceFilter?.id?.toLong(), maybeSearchFilter).enqueue(object : Callback<List<Item>> {
             override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
                 handleItemsResponse(response)
             }
@@ -507,9 +497,9 @@ class HomeActivity : AppCompatActivity() {
         mSwipeRefreshLayout!!.isRefreshing = false
     }
 
-    private fun getRead(maybeTagFilter: Tag? = null, maybeSourceFilter: Sources? = null) {
+    private fun getRead() {
         elementsShown = READ_SHOWN
-        api!!.readItems(maybeTagFilter?.tag, maybeSourceFilter?.id?.toLong()).enqueue(object : Callback<List<Item>> {
+        api!!.readItems(maybeTagFilter?.tag, maybeSourceFilter?.id?.toLong(), maybeSearchFilter).enqueue(object : Callback<List<Item>> {
             override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
                 handleItemsResponse(response)
             }
@@ -521,9 +511,9 @@ class HomeActivity : AppCompatActivity() {
         })
     }
 
-    private fun getStarred(maybeTagFilter: Tag? = null, maybeSourceFilter: Sources? = null) {
+    private fun getStarred() {
         elementsShown = FAV_SHOWN
-        api!!.starredItems(maybeTagFilter?.tag, maybeSourceFilter?.id?.toLong()).enqueue(object : Callback<List<Item>> {
+        api!!.starredItems(maybeTagFilter?.tag, maybeSourceFilter?.id?.toLong(), maybeSearchFilter).enqueue(object : Callback<List<Item>> {
             override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
                 handleItemsResponse(response)
             }
@@ -563,6 +553,11 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.home_menu, menu)
+
+        val searchItem = menu.findItem(R.id.action_search)
+        val searchView = MenuItemCompat.getActionView(searchItem) as SearchView
+        searchView.setOnQueryTextListener(this)
+
         return true
     }
 
@@ -689,5 +684,19 @@ class HomeActivity : AppCompatActivity() {
         val displayMetrics = resources.displayMetrics
         val dpWidth = displayMetrics.widthPixels / displayMetrics.density
         return (dpWidth / 300).toInt()
+    }
+
+    override fun onQueryTextChange(p0: String?): Boolean {
+        if (p0.isNullOrBlank()) {
+            maybeSearchFilter = null
+            getElementsAccordingToTab()
+        }
+        return false
+    }
+
+    override fun onQueryTextSubmit(p0: String?): Boolean {
+        maybeSearchFilter = p0
+        getElementsAccordingToTab()
+        return false
     }
 }

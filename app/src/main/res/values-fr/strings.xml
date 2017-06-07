@@ -114,4 +114,5 @@
     <string name="no_tags_loaded">Pas de tags chargés</string>
     <string name="no_sources_loaded">Pas de sources chargés</string>
     <string name="drawer_loading">Chargement …</string>
+    <string name="menu_home_search">Rechercher</string>
 </resources>

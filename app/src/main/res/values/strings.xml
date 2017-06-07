@@ -116,4 +116,5 @@
     <string name="no_tags_loaded">No tags loaded</string>
     <string name="no_sources_loaded">No sources loaded</string>
     <string name="drawer_loading">Loading …</string>
+    <string name="menu_home_search">Search</string>
 </resources>

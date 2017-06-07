@@ -19,6 +19,7 @@ internal interface SelfossService {
     fun getItems(@Query("type") type: String,
                  @Query("tag") tag: String?,
                  @Query("source") source: Long?,
+                 @Query("search") search: String?,
                  @Query("username") username: String,
                  @Query("password") password: String): Call<List<Item>>
 
