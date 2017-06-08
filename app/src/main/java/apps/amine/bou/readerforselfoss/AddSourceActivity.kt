@@ -31,7 +31,14 @@ class AddSourceActivity : AppCompatActivity() {
         val mTags = findViewById(R.id.tags) as EditText
         val mSpoutsSpinner = findViewById(R.id.spoutsSpinner) as Spinner
         val mSaveBtn = findViewById(R.id.saveBtn) as Button
-        val api = SelfossApi(this)
+        var api: SelfossApi? = null
+
+        try {
+            api = SelfossApi(this)
+        } catch (e: IllegalArgumentException) {
+            mustLoginToAddSource()
+        }
+
 
 
         val intent = intent
@@ -40,7 +47,7 @@ class AddSourceActivity : AppCompatActivity() {
             mNameInput.setText(intent.getStringExtra(Intent.EXTRA_TITLE))
         }
 
-        mSaveBtn.setOnClickListener { handleSaveSource(mTags, mNameInput.text.toString(), mSourceUri.text.toString(), api) }
+        mSaveBtn.setOnClickListener { handleSaveSource(mTags, mNameInput.text.toString(), mSourceUri.text.toString(), api!!) }
 
 
         val spoutsKV = HashMap<String, String>()
@@ -58,14 +65,11 @@ class AddSourceActivity : AppCompatActivity() {
         val config = Config(this)
 
         if (config.baseUrl.isEmpty() || !isUrlValid(config.baseUrl)) {
-            Toast.makeText(this, getString(R.string.addStringNoUrl), Toast.LENGTH_SHORT).show()
-            val i = Intent(this, LoginActivity::class.java)
-            startActivity(i)
-            finish()
+            mustLoginToAddSource()
         } else {
 
             var items: Map<String, Spout>
-            api.spouts().enqueue(object : Callback<Map<String, Spout>> {
+            api!!.spouts().enqueue(object : Callback<Map<String, Spout>> {
                 override fun onResponse(call: Call<Map<String, Spout>>, response: Response<Map<String, Spout>>) {
                     if (response.body() != null) {
                         items = response.body()!!
@@ -97,6 +101,13 @@ class AddSourceActivity : AppCompatActivity() {
                 }
             })
         }
+    }
+
+    private fun mustLoginToAddSource() {
+        Toast.makeText(this, getString(R.string.addStringNoUrl), Toast.LENGTH_SHORT).show()
+        val i = Intent(this, LoginActivity::class.java)
+        startActivity(i)
+        finish()
     }
 
     private fun handleSaveSource(mTags: EditText, title: String, url: String, api: SelfossApi) {
