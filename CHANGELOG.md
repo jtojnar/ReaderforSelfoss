@@ -1,3 +1,9 @@
+**1.5.1.1**
+
+- Fixed an issue when trying to add a source without being logged in.
+
+- Reloading drawer tags badges on slide to refresh.
+
 **1.5.1**
 
 - Added a drawer for filtering sources and tags.
