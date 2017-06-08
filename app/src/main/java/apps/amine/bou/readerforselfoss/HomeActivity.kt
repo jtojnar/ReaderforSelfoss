@@ -387,7 +387,10 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
                 R.color.refresh_progress_1,
                 R.color.refresh_progress_2,
                 R.color.refresh_progress_3)
-        mSwipeRefreshLayout!!.setOnRefreshListener { getElementsAccordingToTab() }
+        mSwipeRefreshLayout!!.setOnRefreshListener {
+            handleDrawerItems()
+            getElementsAccordingToTab()
+        }
 
         val simpleItemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
