@@ -4,6 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 
 
+
 class ParsedContent(val title: String,
                     val content: String,
                     val date_published: String,
@@ -24,17 +25,17 @@ class ParsedContent(val title: String,
     }
 
     constructor(source: Parcel) : this(
-            title = source.readString(),
-            content = source.readString(),
-            date_published = source.readString(),
-            lead_image_url = source.readString(),
-            dek = source.readString(),
-            url = source.readString(),
-            domain = source.readString(),
-            excerpt = source.readString(),
-            total_pages = source.readInt(),
-            rendered_pages = source.readInt(),
-            next_page_url = source.readString()
+        title = source.readString(),
+        content = source.readString(),
+        date_published = source.readString(),
+        lead_image_url = source.readString(),
+        dek = source.readString(),
+        url = source.readString(),
+        domain = source.readString(),
+        excerpt = source.readString(),
+        total_pages = source.readInt(),
+        rendered_pages = source.readInt(),
+        next_page_url = source.readString()
     )
 
     override fun describeContents() = 0

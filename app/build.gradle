@@ -25,8 +25,8 @@ android {
         applicationId "apps.amine.bou.readerforselfoss"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 1511
-        versionName "1.5.1.1"
+        versionCode 1512
+        versionName "1.5.1.2"
 
         // Enabling multidex support.
         multiDexEnabled true

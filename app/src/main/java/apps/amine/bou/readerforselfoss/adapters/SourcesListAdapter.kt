@@ -12,10 +12,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import apps.amine.bou.readerforselfoss.R
-import apps.amine.bou.readerforselfoss.api.selfoss.SelfossApi
-import apps.amine.bou.readerforselfoss.api.selfoss.Sources
-import apps.amine.bou.readerforselfoss.api.selfoss.SuccessResponse
+
 import com.amulyakhare.textdrawable.TextDrawable
 import com.amulyakhare.textdrawable.util.ColorGenerator
 import com.bumptech.glide.Glide
@@ -24,7 +21,16 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class SourcesListAdapter(private val app: Activity, private val items: ArrayList<Sources>, private val api: SelfossApi) : RecyclerView.Adapter<SourcesListAdapter.ViewHolder>() {
+import apps.amine.bou.readerforselfoss.R
+import apps.amine.bou.readerforselfoss.api.selfoss.SelfossApi
+import apps.amine.bou.readerforselfoss.api.selfoss.Sources
+import apps.amine.bou.readerforselfoss.api.selfoss.SuccessResponse
+
+
+
+class SourcesListAdapter(private val app: Activity,
+                         private val items: ArrayList<Sources>,
+                         private val api: SelfossApi) : RecyclerView.Adapter<SourcesListAdapter.ViewHolder>() {
     private val c: Context = app.baseContext
     private val generator: ColorGenerator = ColorGenerator.MATERIAL
 
@@ -49,13 +55,18 @@ class SourcesListAdapter(private val app: Activity, private val items: ArrayList
             val drawable = builder.build(textDrawable.toString(), color)
             holder.sourceImage!!.setImageDrawable(drawable)
         } else {
-            Glide.with(c).load(itm.getIcon(c)).asBitmap().centerCrop().into(object : BitmapImageViewTarget(holder.sourceImage) {
-                override fun setResource(resource: Bitmap) {
-                    val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(c.resources, resource)
-                    circularBitmapDrawable.isCircular = true
-                    fHolder.sourceImage!!.setImageDrawable(circularBitmapDrawable)
-                }
-            })
+            Glide
+                .with(c)
+                .load(itm.getIcon(c))
+                .asBitmap()
+                .centerCrop()
+                .into(object : BitmapImageViewTarget(holder.sourceImage) {
+                    override fun setResource(resource: Bitmap) {
+                        val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(c.resources, resource)
+                        circularBitmapDrawable.isCircular = true
+                        fHolder.sourceImage!!.setImageDrawable(circularBitmapDrawable)
+                    }
+                })
         }
 
         holder.sourceTitle!!.text = itm.title
@@ -89,12 +100,12 @@ class SourcesListAdapter(private val app: Activity, private val items: ArrayList
                             notifyItemRemoved(adapterPosition)
                             notifyItemRangeChanged(adapterPosition, itemCount)
                         } else {
-                            Toast.makeText(app, "Petit soucis lors de la suppression de la source.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(app, R.string.can_delete_source, Toast.LENGTH_SHORT).show()
                         }
                     }
 
                     override fun onFailure(call: Call<SuccessResponse>, t: Throwable) {
-                        Toast.makeText(app, "Petit soucis lors de la suppression de la source.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(app, R.string.can_delete_source, Toast.LENGTH_SHORT).show()
                     }
                 })
             }

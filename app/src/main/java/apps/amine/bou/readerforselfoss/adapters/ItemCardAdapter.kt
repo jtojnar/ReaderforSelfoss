@@ -1,6 +1,5 @@
 package apps.amine.bou.readerforselfoss.adapters
 
-
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -20,13 +19,7 @@ import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 import android.widget.TextView
 import android.widget.Toast
-import apps.amine.bou.readerforselfoss.R
-import apps.amine.bou.readerforselfoss.api.selfoss.Item
-import apps.amine.bou.readerforselfoss.api.selfoss.SelfossApi
-import apps.amine.bou.readerforselfoss.api.selfoss.SuccessResponse
-import apps.amine.bou.readerforselfoss.utils.buildCustomTabsIntent
-import apps.amine.bou.readerforselfoss.utils.customtabs.CustomTabActivityHelper
-import apps.amine.bou.readerforselfoss.utils.openItemUrl
+
 import com.amulyakhare.textdrawable.TextDrawable
 import com.amulyakhare.textdrawable.util.ColorGenerator
 import com.bumptech.glide.Glide
@@ -40,10 +33,21 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
+import apps.amine.bou.readerforselfoss.R
+import apps.amine.bou.readerforselfoss.api.selfoss.Item
+import apps.amine.bou.readerforselfoss.api.selfoss.SelfossApi
+import apps.amine.bou.readerforselfoss.api.selfoss.SuccessResponse
+import apps.amine.bou.readerforselfoss.utils.buildCustomTabsIntent
+import apps.amine.bou.readerforselfoss.utils.customtabs.CustomTabActivityHelper
+import apps.amine.bou.readerforselfoss.utils.openItemUrl
 
-class ItemCardAdapter(private val app: Activity, private val items: ArrayList<Item>, private val api: SelfossApi,
-                      private val helper: CustomTabActivityHelper, private val internalBrowser: Boolean,
-                      private val articleViewer: Boolean, private val fullHeightCards: Boolean) : RecyclerView.Adapter<ItemCardAdapter.ViewHolder>() {
+class ItemCardAdapter(private val app: Activity,
+                      private val items: ArrayList<Item>,
+                      private val api: SelfossApi,
+                      private val helper: CustomTabActivityHelper,
+                      private val internalBrowser: Boolean,
+                      private val articleViewer: Boolean,
+                      private val fullHeightCards: Boolean) : RecyclerView.Adapter<ItemCardAdapter.ViewHolder>() {
     private val c: Context = app.applicationContext
     private val generator: ColorGenerator = ColorGenerator.MATERIAL
 
@@ -56,8 +60,8 @@ class ItemCardAdapter(private val app: Activity, private val items: ArrayList<It
         val itm = items[position]
 
 
-        holder.saveBtn!!.isLiked = itm.starred
-        holder.title!!.text = Html.fromHtml(itm.title)
+        holder.saveBtn.isLiked = itm.starred
+        holder.title.text = Html.fromHtml(itm.title)
 
         var sourceAndDate = itm.sourcetitle
         val d: Long
@@ -73,11 +77,11 @@ class ItemCardAdapter(private val app: Activity, private val items: ArrayList<It
             e.printStackTrace()
         }
 
-        holder.sourceTitleAndDate!!.text = sourceAndDate
+        holder.sourceTitleAndDate.text = sourceAndDate
 
         if (itm.getThumbnail(c).isEmpty()) {
             Glide.clear(holder.itemImage)
-            holder.itemImage!!.setImageDrawable(null)
+            holder.itemImage.setImageDrawable(null)
         } else {
             if (fullHeightCards) {
                 Glide.with(c).load(itm.getThumbnail(c)).asBitmap().fitCenter().into(holder.itemImage)
@@ -97,19 +101,19 @@ class ItemCardAdapter(private val app: Activity, private val items: ArrayList<It
             val builder = TextDrawable.builder().round()
 
             val drawable = builder.build(textDrawable.toString(), color)
-            holder.sourceImage!!.setImageDrawable(drawable)
+            holder.sourceImage.setImageDrawable(drawable)
         } else {
 
             Glide.with(c).load(itm.getIcon(c)).asBitmap().centerCrop().into(object : BitmapImageViewTarget(holder.sourceImage) {
                 override fun setResource(resource: Bitmap) {
                     val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(c.resources, resource)
                     circularBitmapDrawable.isCircular = true
-                    fHolder.sourceImage!!.setImageDrawable(circularBitmapDrawable)
+                    fHolder.sourceImage.setImageDrawable(circularBitmapDrawable)
                 }
             })
         }
 
-        holder.saveBtn!!.isLiked = itm.starred
+        holder.saveBtn.isLiked = itm.starred
     }
 
     override fun getItemCount(): Int {
@@ -163,13 +167,13 @@ class ItemCardAdapter(private val app: Activity, private val items: ArrayList<It
     }
 
     inner class ViewHolder(val mView: ConstraintLayout) : RecyclerView.ViewHolder(mView) {
-        var saveBtn: LikeButton? = null
-        var browserBtn: ImageButton? = null
-        var shareBtn: ImageButton? = null
-        var itemImage: ImageView? = null
-        var sourceImage: ImageView? = null
-        var title: TextView? = null
-        var sourceTitleAndDate: TextView? = null
+        lateinit var saveBtn: LikeButton
+        lateinit var browserBtn: ImageButton
+        lateinit var shareBtn: ImageButton
+        lateinit var itemImage: ImageView
+        lateinit var sourceImage: ImageView
+        lateinit var title: TextView
+        lateinit var sourceTitleAndDate: TextView
 
         init {
             handleClickListeners()
@@ -186,18 +190,18 @@ class ItemCardAdapter(private val app: Activity, private val items: ArrayList<It
             browserBtn = mView.findViewById(R.id.browserBtn) as ImageButton
 
             if (!fullHeightCards) {
-                itemImage!!.maxHeight = c.resources.getDimension(R.dimen.card_image_max_height).toInt()
-                itemImage!!.scaleType = ScaleType.CENTER_CROP
+                itemImage.maxHeight = c.resources.getDimension(R.dimen.card_image_max_height).toInt()
+                itemImage.scaleType = ScaleType.CENTER_CROP
             }
 
-            saveBtn!!.setOnLikeListener(object : OnLikeListener {
+            saveBtn.setOnLikeListener(object : OnLikeListener {
                 override fun liked(likeButton: LikeButton) {
                     val (id) = items[adapterPosition]
                     api.starrItem(id).enqueue(object : Callback<SuccessResponse> {
                         override fun onResponse(call: Call<SuccessResponse>, response: Response<SuccessResponse>) {}
 
                         override fun onFailure(call: Call<SuccessResponse>, t: Throwable) {
-                            saveBtn!!.isLiked = false
+                            saveBtn.isLiked = false
                             Toast.makeText(c, R.string.cant_mark_favortie, Toast.LENGTH_SHORT).show()
                         }
                     })
@@ -209,14 +213,14 @@ class ItemCardAdapter(private val app: Activity, private val items: ArrayList<It
                         override fun onResponse(call: Call<SuccessResponse>, response: Response<SuccessResponse>) {}
 
                         override fun onFailure(call: Call<SuccessResponse>, t: Throwable) {
-                            saveBtn!!.isLiked = true
+                            saveBtn.isLiked = true
                             Toast.makeText(c, R.string.cant_unmark_favortie, Toast.LENGTH_SHORT).show()
                         }
                     })
                 }
             })
 
-            shareBtn!!.setOnClickListener {
+            shareBtn.setOnClickListener {
                 val i = items[adapterPosition]
                 val sendIntent = Intent()
                 sendIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -226,7 +230,7 @@ class ItemCardAdapter(private val app: Activity, private val items: ArrayList<It
                 c.startActivity(Intent.createChooser(sendIntent, c.getString(R.string.share)).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
             }
 
-            browserBtn!!.setOnClickListener {
+            browserBtn.setOnClickListener {
                 val i = items[adapterPosition]
                 val intent = Intent(Intent.ACTION_VIEW)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -241,11 +245,11 @@ class ItemCardAdapter(private val app: Activity, private val items: ArrayList<It
 
             mView.setOnClickListener {
                 openItemUrl(items[adapterPosition],
-                        customTabsIntent,
-                        internalBrowser,
-                        articleViewer,
-                        app,
-                        c)
+                    customTabsIntent,
+                    internalBrowser,
+                    articleViewer,
+                    app,
+                    c)
             }
         }
     }

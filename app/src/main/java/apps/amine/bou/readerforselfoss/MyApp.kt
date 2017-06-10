@@ -5,14 +5,13 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.support.multidex.MultiDexApplication
 import android.widget.ImageView
-import com.crashlytics.android.Crashlytics
-import com.github.stkent.amplify.tracking.Amplify
-import io.fabric.sdk.android.Fabric
 import com.anupcowkur.reservoir.Reservoir
 import com.bumptech.glide.Glide
-import com.mikepenz.iconics.IconicsDrawable
+import com.crashlytics.android.Crashlytics
+import com.github.stkent.amplify.tracking.Amplify
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader
 import com.mikepenz.materialdrawer.util.DrawerImageLoader
+import io.fabric.sdk.android.Fabric
 import java.io.IOException
 
 

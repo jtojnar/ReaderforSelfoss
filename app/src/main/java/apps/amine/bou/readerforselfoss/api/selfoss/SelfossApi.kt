@@ -1,8 +1,8 @@
 package apps.amine.bou.readerforselfoss.api.selfoss
 
-
 import android.content.Context
-import apps.amine.bou.readerforselfoss.utils.Config
+import java.util.concurrent.ConcurrentHashMap
+
 import com.burgstaller.okhttp.AuthenticationCacheInterceptor
 import com.burgstaller.okhttp.CachingAuthenticatorDecorator
 import com.burgstaller.okhttp.DispatchingAuthenticator
@@ -16,7 +16,9 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.ConcurrentHashMap
+
+import apps.amine.bou.readerforselfoss.utils.Config
+
 
 
 class SelfossApi(c: Context) {
@@ -43,28 +45,33 @@ class SelfossApi(c: Context) {
 
         // note that all auth schemes should be registered as lowercase!
         val authenticator = DispatchingAuthenticator.Builder()
-                .with("digest", digestAuthenticator)
-                .with("basic", basicAuthenticator)
-                .build()
+            .with("digest", digestAuthenticator)
+            .with("basic", basicAuthenticator)
+            .build()
 
         val client = httpBuilder
-                .authenticator(CachingAuthenticatorDecorator(authenticator, authCache))
-                .addInterceptor(AuthenticationCacheInterceptor(authCache))
-                .addInterceptor(interceptor)
-                .build()
+            .authenticator(CachingAuthenticatorDecorator(authenticator, authCache))
+            .addInterceptor(AuthenticationCacheInterceptor(authCache))
+            .addInterceptor(interceptor)
+            .build()
 
 
         val builder = GsonBuilder()
         builder.registerTypeAdapter(Boolean::class.javaPrimitiveType, BooleanTypeAdapter())
 
         val gson = builder
-                .setLenient()
-                .create()
+            .setLenient()
+            .create()
 
         userName = config.userLogin
         password = config.userPassword
-        val retrofit = Retrofit.Builder().baseUrl(config.baseUrl).client(client)
-                .addConverterFactory(GsonConverterFactory.create(gson)).build()
+        val retrofit =
+            Retrofit
+                .Builder()
+                .baseUrl(config.baseUrl)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build()
         service = retrofit.create(SelfossService::class.java)
     }
 

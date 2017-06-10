@@ -15,7 +15,6 @@
     <string name="label_share">"Partager"</string>
     <string name="readAll">"Tout lire"</string>
     <string name="action_disconnect">"Déconnecter"</string>
-    <string name="action_source">"Sources"</string>
     <string name="title_activity_settings">"Paramètres"</string>
     <string name="pref_header_general">"General"</string>
     <string name="pref_switch_actions_tap_title">"Action du clique sur un article"</string>
@@ -115,4 +114,5 @@
     <string name="no_sources_loaded">Pas de sources chargés</string>
     <string name="drawer_loading">Chargement …</string>
     <string name="menu_home_search">Rechercher</string>
+    <string name="can_delete_source">Petit soucis lors de la suppression de la source.</string>
 </resources>

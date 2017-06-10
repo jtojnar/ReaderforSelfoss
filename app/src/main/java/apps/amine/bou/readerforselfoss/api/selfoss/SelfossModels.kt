@@ -4,8 +4,10 @@ import android.content.Context
 import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable
+
 import apps.amine.bou.readerforselfoss.utils.Config
 import apps.amine.bou.readerforselfoss.utils.isEmptyOrNullOrNullString
+
 
 
 private fun constructUrl(config: Config?, path: String, file: String): String {
@@ -65,15 +67,15 @@ data class Item(val id: String,
     }
 
     constructor(source: Parcel) : this(
-            id = source.readString(),
-            datetime = source.readString(),
-            title = source.readString(),
-            unread = 0.toByte() != source.readByte(),
-            starred = 0.toByte() != source.readByte(),
-            thumbnail = source.readString(),
-            icon = source.readString(),
-            link = source.readString(),
-            sourcetitle = source.readString()
+        id = source.readString(),
+        datetime = source.readString(),
+        title = source.readString(),
+        unread = 0.toByte() != source.readByte(),
+        starred = 0.toByte() != source.readByte(),
+        thumbnail = source.readString(),
+        icon = source.readString(),
+        link = source.readString(),
+        sourcetitle = source.readString()
     )
 
     override fun describeContents() = 0

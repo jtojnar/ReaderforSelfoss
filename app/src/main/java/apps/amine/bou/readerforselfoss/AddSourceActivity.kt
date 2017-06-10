@@ -6,14 +6,17 @@ import android.support.constraint.ConstraintLayout
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.*
+
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+
 import apps.amine.bou.readerforselfoss.api.selfoss.SelfossApi
 import apps.amine.bou.readerforselfoss.api.selfoss.Spout
 import apps.amine.bou.readerforselfoss.api.selfoss.SuccessResponse
 import apps.amine.bou.readerforselfoss.utils.Config
 import apps.amine.bou.readerforselfoss.utils.isUrlValid
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+
 
 
 class AddSourceActivity : AppCompatActivity() {
@@ -39,15 +42,15 @@ class AddSourceActivity : AppCompatActivity() {
             mustLoginToAddSource()
         }
 
-
-
         val intent = intent
         if (Intent.ACTION_SEND == intent.action && "text/plain" == intent.type) {
             mSourceUri.setText(intent.getStringExtra(Intent.EXTRA_TEXT))
             mNameInput.setText(intent.getStringExtra(Intent.EXTRA_TITLE))
         }
 
-        mSaveBtn.setOnClickListener { handleSaveSource(mTags, mNameInput.text.toString(), mSourceUri.text.toString(), api!!) }
+        mSaveBtn.setOnClickListener {
+            handleSaveSource(mTags, mNameInput.text.toString(), mSourceUri.text.toString(), api!!)
+        }
 
 
         val spoutsKV = HashMap<String, String>()
@@ -82,7 +85,11 @@ class AddSourceActivity : AppCompatActivity() {
                         mProgress.visibility = View.GONE
                         mForm.visibility = View.VISIBLE
 
-                        val spinnerArrayAdapter = ArrayAdapter(this@AddSourceActivity, android.R.layout.simple_spinner_item, itemsStrings)
+                        val spinnerArrayAdapter =
+                            ArrayAdapter(
+                                this@AddSourceActivity,
+                                android.R.layout.simple_spinner_item,
+                                itemsStrings)
                         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                         mSpoutsSpinner.adapter = spinnerArrayAdapter
 
@@ -115,7 +122,13 @@ class AddSourceActivity : AppCompatActivity() {
         if (title.isEmpty() || url.isEmpty() || mSpoutsValue == null || mSpoutsValue!!.isEmpty()) {
             Toast.makeText(this, R.string.form_not_complete, Toast.LENGTH_SHORT).show()
         } else {
-            api.createSource(title, url, mSpoutsValue!!, mTags.text.toString(), "").enqueue(object : Callback<SuccessResponse> {
+            api.createSource(
+                title,
+                url,
+                mSpoutsValue!!,
+                mTags.text.toString(),
+                ""
+            ).enqueue(object : Callback<SuccessResponse> {
                 override fun onResponse(call: Call<SuccessResponse>, response: Response<SuccessResponse>) {
                     if (response.body() != null && response.body()!!.isSuccess) {
                         finish()

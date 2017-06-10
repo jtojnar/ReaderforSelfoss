@@ -1,13 +1,15 @@
 package apps.amine.bou.readerforselfoss
 
-import agency.tango.materialintroscreen.MaterialIntroActivity
-import agency.tango.materialintroscreen.MessageButtonBehaviour
-import agency.tango.materialintroscreen.SlideFragmentBuilder
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.view.View
+
+import agency.tango.materialintroscreen.MaterialIntroActivity
+import agency.tango.materialintroscreen.MessageButtonBehaviour
+import agency.tango.materialintroscreen.SlideFragmentBuilder
+
 
 
 class IntroActivity : MaterialIntroActivity() {
@@ -16,32 +18,32 @@ class IntroActivity : MaterialIntroActivity() {
         super.onCreate(savedInstanceState)
 
         addSlide(SlideFragmentBuilder()
-                .backgroundColor(R.color.colorPrimary)
-                .buttonsColor(R.color.colorAccent)
-                .image(R.mipmap.ic_launcher)
-                .title(getString(R.string.intro_hello_title))
-                .description(getString(R.string.intro_hello_message))
-                .build())
+            .backgroundColor(R.color.colorPrimary)
+            .buttonsColor(R.color.colorAccent)
+            .image(R.mipmap.ic_launcher)
+            .title(getString(R.string.intro_hello_title))
+            .description(getString(R.string.intro_hello_message))
+            .build())
 
         addSlide(SlideFragmentBuilder()
-                .backgroundColor(R.color.colorAccent)
-                .buttonsColor(R.color.colorPrimary)
-                .image(R.drawable.ic_info_outline_white_48dp)
-                .title(getString(R.string.intro_needs_selfoss_title))
-                .description(getString(R.string.intro_needs_selfoss_message))
-                .build(),
-                MessageButtonBehaviour(View.OnClickListener {
-                    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://selfoss.aditu.de"))
-                    startActivity(browserIntent)
-                }, getString(R.string.intro_needs_selfoss_link)))
+            .backgroundColor(R.color.colorAccent)
+            .buttonsColor(R.color.colorPrimary)
+            .image(R.drawable.ic_info_outline_white_48dp)
+            .title(getString(R.string.intro_needs_selfoss_title))
+            .description(getString(R.string.intro_needs_selfoss_message))
+            .build(),
+            MessageButtonBehaviour(View.OnClickListener {
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://selfoss.aditu.de"))
+                startActivity(browserIntent)
+            }, getString(R.string.intro_needs_selfoss_link)))
 
         addSlide(SlideFragmentBuilder()
-                .backgroundColor(R.color.colorPrimaryDark)
-                .buttonsColor(R.color.colorAccentDark)
-                .image(R.drawable.ic_thumb_up_white_48dp)
-                .title(getString(R.string.intro_all_set_title))
-                .description(getString(R.string.intro_all_set_message))
-                .build())
+            .backgroundColor(R.color.colorPrimaryDark)
+            .buttonsColor(R.color.colorAccentDark)
+            .image(R.drawable.ic_thumb_up_white_48dp)
+            .title(getString(R.string.intro_all_set_title))
+            .description(getString(R.string.intro_all_set_message))
+            .build())
     }
 
     override fun onFinish() {

@@ -1,8 +1,6 @@
 /* From https://github.com/mikepenz/MaterialDrawer/blob/develop/app/src/main/java/com/mikepenz/materialdrawer/app/drawerItems/CustomUrlBasePrimaryDrawerItem.java */
 package apps.amine.bou.readerforselfoss.utils.drawer
 
-
-import android.content.Context
 import android.net.Uri
 import android.support.annotation.ColorInt
 import android.support.annotation.ColorRes
@@ -16,6 +14,7 @@ import com.mikepenz.materialdrawer.model.BaseDrawerItem
 import com.mikepenz.materialdrawer.util.DrawerImageLoader
 import com.mikepenz.materialdrawer.util.DrawerUIUtils
 import com.mikepenz.materialize.util.UIUtils
+
 
 
 abstract class CustomUrlBasePrimaryDrawerItem<T, VH : RecyclerView.ViewHolder> : BaseDrawerItem<T, VH>() {

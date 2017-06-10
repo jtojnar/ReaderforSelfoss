@@ -18,11 +18,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Switch
 import android.widget.TextView
-import apps.amine.bou.readerforselfoss.api.selfoss.SelfossApi
-import apps.amine.bou.readerforselfoss.api.selfoss.SuccessResponse
-import apps.amine.bou.readerforselfoss.utils.Config
-import apps.amine.bou.readerforselfoss.utils.checkAndDisplayStoreApk
-import apps.amine.bou.readerforselfoss.utils.isUrlValid
+
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.LibsBuilder
@@ -30,21 +26,29 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+import apps.amine.bou.readerforselfoss.api.selfoss.SelfossApi
+import apps.amine.bou.readerforselfoss.api.selfoss.SuccessResponse
+import apps.amine.bou.readerforselfoss.utils.Config
+import apps.amine.bou.readerforselfoss.utils.checkAndDisplayStoreApk
+import apps.amine.bou.readerforselfoss.utils.isUrlValid
+
+
 
 class LoginActivity : AppCompatActivity() {
 
-    private var settings: SharedPreferences? = null
-    private var mProgressView: View? = null
-    private var mUrlView: EditText? = null
-    private var mLoginView: TextView? = null
-    private var mHTTPLoginView: TextView? = null
-    private var mPasswordView: EditText? = null
-    private var mHTTPPasswordView: EditText? = null
     private var inValidCount: Int = 0
     private var isWithLogin = false
     private var isWithHTTPLogin = false
-    private var mLoginFormView: View? = null
-    private var  mFirebaseAnalytics: FirebaseAnalytics? = null
+
+    private lateinit var settings: SharedPreferences
+    private lateinit var mFirebaseAnalytics: FirebaseAnalytics
+    private lateinit var mUrlView: EditText
+    private lateinit var mLoginView: TextView
+    private lateinit var mHTTPLoginView: TextView
+    private lateinit var mProgressView: View
+    private lateinit var mPasswordView: EditText
+    private lateinit var mHTTPPasswordView: EditText
+    private lateinit var mLoginFormView: View
 
 
 
@@ -53,15 +57,11 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         settings = getSharedPreferences(Config.settingsName, Context.MODE_PRIVATE)
-        if (settings!!.getString("url", "").isNotEmpty()) {
+        if (settings.getString("url", "").isNotEmpty()) {
             goToMain()
         } else {
             checkAndDisplayStoreApk(this@LoginActivity)
         }
-
-        isWithLogin = false
-        isWithHTTPLogin = false
-        inValidCount = 0
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
         mUrlView = findViewById(R.id.url) as EditText
@@ -80,7 +80,7 @@ class LoginActivity : AppCompatActivity() {
         val mHTTPPasswordLayout = findViewById(R.id.httpPasswordInput) as TextInputLayout
         val mEmailSignInButton = findViewById(R.id.email_sign_in_button) as Button
 
-        mPasswordView!!.setOnEditorActionListener(TextView.OnEditorActionListener { _, id, _ ->
+        mPasswordView.setOnEditorActionListener(TextView.OnEditorActionListener { _, id, _ ->
             if (id == R.id.login || id == EditorInfo.IME_NULL) {
                 attemptLogin()
                 return@OnEditorActionListener true
@@ -92,26 +92,16 @@ class LoginActivity : AppCompatActivity() {
 
         mSwitch.setOnCheckedChangeListener { _, b ->
             isWithLogin = !isWithLogin
-            val visi: Int
-            if (b) {
-                visi = View.VISIBLE
+            val visi: Int = if (b) View.VISIBLE else View.GONE
 
-            } else {
-                visi = View.GONE
-            }
             mLoginLayout.visibility = visi
             mPasswordLayout.visibility = visi
         }
 
         mHTTPSwitch.setOnCheckedChangeListener { _, b ->
             isWithHTTPLogin = !isWithHTTPLogin
-            val visi: Int
-            if (b) {
-                visi = View.VISIBLE
+            val visi: Int = if (b) View.VISIBLE else View.GONE
 
-            } else {
-                visi = View.GONE
-            }
             mHTTPLoginLayout.visibility = visi
             mHTTPPasswordLayout.visibility = visi
         }
@@ -126,24 +116,24 @@ class LoginActivity : AppCompatActivity() {
     private fun attemptLogin() {
 
         // Reset errors.
-        mUrlView!!.error = null
-        mLoginView!!.error = null
-        mHTTPLoginView!!.error = null
-        mPasswordView!!.error = null
-        mHTTPPasswordView!!.error = null
+        mUrlView.error = null
+        mLoginView.error = null
+        mHTTPLoginView.error = null
+        mPasswordView.error = null
+        mHTTPPasswordView.error = null
 
         // Store values at the time of the login attempt.
-        val url = mUrlView!!.text.toString()
-        val login = mLoginView!!.text.toString()
-        val httpLogin = mHTTPLoginView!!.text.toString()
-        val password = mPasswordView!!.text.toString()
-        val httpPassword = mHTTPPasswordView!!.text.toString()
+        val url = mUrlView.text.toString()
+        val login = mLoginView.text.toString()
+        val httpLogin = mHTTPLoginView.text.toString()
+        val password = mPasswordView.text.toString()
+        val httpPassword = mHTTPPasswordView.text.toString()
 
         var cancel = false
         var focusView: View? = null
 
         if (!isUrlValid(url)) {
-            mUrlView!!.error = getString(R.string.login_url_problem)
+            mUrlView.error = getString(R.string.login_url_problem)
             focusView = mUrlView
             cancel = true
             inValidCount++
@@ -151,8 +141,10 @@ class LoginActivity : AppCompatActivity() {
                 val alertDialog = AlertDialog.Builder(this).create()
                 alertDialog.setTitle(getString(R.string.warning_wrong_url))
                 alertDialog.setMessage(getString(R.string.text_wrong_url))
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                        { dialog, _ -> dialog.dismiss() })
+                alertDialog.setButton(
+                    AlertDialog.BUTTON_NEUTRAL,
+                    "OK",
+                    { dialog, _ -> dialog.dismiss() })
                 alertDialog.show()
                 inValidCount = 0
             }
@@ -160,24 +152,24 @@ class LoginActivity : AppCompatActivity() {
 
         if (isWithLogin || isWithHTTPLogin) {
             if (TextUtils.isEmpty(password)) {
-                mPasswordView!!.error = getString(R.string.error_invalid_password)
+                mPasswordView.error = getString(R.string.error_invalid_password)
                 focusView = mPasswordView
                 cancel = true
             }
 
             if (TextUtils.isEmpty(login)) {
-                mLoginView!!.error = getString(R.string.error_field_required)
+                mLoginView.error = getString(R.string.error_field_required)
                 focusView = mLoginView
                 cancel = true
             }
         }
 
         if (cancel) {
-            focusView!!.requestFocus()
+            focusView?.requestFocus()
         } else {
             showProgress(true)
 
-            val editor = settings!!.edit()
+            val editor = settings.edit()
             editor.putString("url", url)
             editor.putString("login", login)
             editor.putString("httpUserName", httpLogin)
@@ -194,17 +186,17 @@ class LoginActivity : AppCompatActivity() {
                     editor.remove("password")
                     editor.remove("httpPassword")
                     editor.apply()
-                    mUrlView!!.error = getString(R.string.wrong_infos)
-                    mLoginView!!.error = getString(R.string.wrong_infos)
-                    mPasswordView!!.error = getString(R.string.wrong_infos)
-                    mHTTPLoginView!!.error = getString(R.string.wrong_infos)
-                    mHTTPPasswordView!!.error = getString(R.string.wrong_infos)
+                    mUrlView.error = getString(R.string.wrong_infos)
+                    mLoginView.error = getString(R.string.wrong_infos)
+                    mPasswordView.error = getString(R.string.wrong_infos)
+                    mHTTPLoginView.error = getString(R.string.wrong_infos)
+                    mHTTPPasswordView.error = getString(R.string.wrong_infos)
                     showProgress(false)
                 }
 
                 override fun onResponse(call: Call<SuccessResponse>, response: Response<SuccessResponse>) {
                     if (response.body() != null && response.body()!!.isSuccess) {
-                        mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.LOGIN, Bundle())
+                        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, Bundle())
                         goToMain()
                     } else {
                         preferenceError()
@@ -224,26 +216,33 @@ class LoginActivity : AppCompatActivity() {
     private fun showProgress(show: Boolean) {
         val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime)
 
-        mLoginFormView!!.visibility = if (show) View.GONE else View.VISIBLE
-        mLoginFormView!!.animate().setDuration(shortAnimTime.toLong()).alpha(
-                if (show) 0F else 1F).setListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator) {
-                mLoginFormView!!.visibility = if (show) View.GONE else View.VISIBLE
-            }
-        })
+        mLoginFormView.visibility = if (show) View.GONE else View.VISIBLE
+        mLoginFormView
+            .animate()
+            .setDuration(shortAnimTime.toLong())
+            .alpha(
+                if (show) 0F else 1F
+            ).setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    mLoginFormView.visibility = if (show) View.GONE else View.VISIBLE
+                }
+            })
 
-        mProgressView!!.visibility = if (show) View.VISIBLE else View.GONE
-        mProgressView!!.animate().setDuration(shortAnimTime.toLong()).alpha(
-                if (show) 1F else 0F).setListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator) {
-                mProgressView!!.visibility = if (show) View.VISIBLE else View.GONE
-            }
-        })
+        mProgressView.visibility = if (show) View.VISIBLE else View.GONE
+        mProgressView
+            .animate()
+            .setDuration(shortAnimTime.toLong())
+            .alpha(
+                if (show) 1F else 0F
+            ).setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    mProgressView.visibility = if (show) View.VISIBLE else View.GONE
+                }
+            })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.login_menu, menu)
+        menuInflater.inflate(R.menu.login_menu, menu)
         return true
     }
 
@@ -251,10 +250,10 @@ class LoginActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.about -> {
                 LibsBuilder()
-                        .withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR)
-                        .withAboutIconShown(true)
-                        .withAboutVersionShown(true)
-                        .start(this)
+                    .withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR)
+                    .withAboutIconShown(true)
+                    .withAboutVersionShown(true)
+                    .start(this)
                 return true
             }
             else -> return super.onOptionsItemSelected(item)

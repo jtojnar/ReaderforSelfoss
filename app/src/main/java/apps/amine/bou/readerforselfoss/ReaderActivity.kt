@@ -9,10 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import apps.amine.bou.readerforselfoss.api.mercury.MercuryApi
-import apps.amine.bou.readerforselfoss.api.mercury.ParsedContent
-import apps.amine.bou.readerforselfoss.utils.buildCustomTabsIntent
-import apps.amine.bou.readerforselfoss.utils.customtabs.CustomTabActivityHelper
+
 import com.bumptech.glide.Glide
 import org.sufficientlysecure.htmltextview.HtmlHttpImageGetter
 import org.sufficientlysecure.htmltextview.HtmlTextView
@@ -21,18 +18,24 @@ import retrofit2.Callback
 import retrofit2.Response
 import xyz.klinker.android.drag_dismiss.activity.DragDismissActivity
 
+import apps.amine.bou.readerforselfoss.api.mercury.MercuryApi
+import apps.amine.bou.readerforselfoss.api.mercury.ParsedContent
+import apps.amine.bou.readerforselfoss.utils.buildCustomTabsIntent
+import apps.amine.bou.readerforselfoss.utils.customtabs.CustomTabActivityHelper
+
+
 
 class ReaderActivity : DragDismissActivity() {
-    private var mCustomTabActivityHelper: CustomTabActivityHelper? = null
+    private lateinit var mCustomTabActivityHelper: CustomTabActivityHelper
 
     override fun onStart() {
         super.onStart()
-        mCustomTabActivityHelper!!.bindCustomTabsService(this)
+        mCustomTabActivityHelper.bindCustomTabsService(this)
     }
 
     override fun onStop() {
         super.onStop()
-        mCustomTabActivityHelper!!.unbindCustomTabsService(this)
+        mCustomTabActivityHelper.unbindCustomTabsService(this)
     }
 
     override fun onCreateContent(inflater: LayoutInflater, parent: ViewGroup, savedInstanceState: Bundle?): View {
@@ -51,7 +54,7 @@ class ReaderActivity : DragDismissActivity() {
 
         val customTabsIntent = buildCustomTabsIntent(this@ReaderActivity)
         mCustomTabActivityHelper = CustomTabActivityHelper()
-        mCustomTabActivityHelper!!.bindCustomTabsService(this)
+        mCustomTabActivityHelper.bindCustomTabsService(this)
 
 
         parser.parseUrl(url).enqueue(object : Callback<ParsedContent> {
@@ -62,7 +65,12 @@ class ReaderActivity : DragDismissActivity() {
                     if (response.body()!!.content != null && !response.body()!!.content.isEmpty())
                         content.setHtml(response.body()!!.content, HtmlHttpImageGetter(content, null, true))
                     if (response.body()!!.lead_image_url != null && !response.body()!!.lead_image_url.isEmpty())
-                        Glide.with(applicationContext).load(response.body()!!.lead_image_url).asBitmap().fitCenter().into(image)
+                        Glide
+                            .with(applicationContext)
+                            .load(response.body()!!.lead_image_url)
+                            .asBitmap()
+                            .fitCenter()
+                            .into(image)
 
                     shareBtn.setOnClickListener {
                         val sendIntent = Intent()
@@ -81,14 +89,10 @@ class ReaderActivity : DragDismissActivity() {
                     }
 
                     hideProgressBar()
-                } else {
-                    errorAfterMercuryCall()
-                }
+                } else errorAfterMercuryCall()
             }
 
-            override fun onFailure(call: Call<ParsedContent>, t: Throwable) {
-                errorAfterMercuryCall()
-            }
+            override fun onFailure(call: Call<ParsedContent>, t: Throwable) = errorAfterMercuryCall()
 
             private fun errorAfterMercuryCall() {
                 CustomTabActivityHelper.openCustomTab(this@ReaderActivity, customTabsIntent, Uri.parse(url)

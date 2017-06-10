@@ -6,13 +6,16 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.widget.Toast
-import apps.amine.bou.readerforselfoss.adapters.SourcesListAdapter
-import apps.amine.bou.readerforselfoss.api.selfoss.SelfossApi
-import apps.amine.bou.readerforselfoss.api.selfoss.Sources
+
 import com.melnykov.fab.FloatingActionButton
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
+import apps.amine.bou.readerforselfoss.adapters.SourcesListAdapter
+import apps.amine.bou.readerforselfoss.api.selfoss.SelfossApi
+import apps.amine.bou.readerforselfoss.api.selfoss.Sources
+
 
 
 class SourcesActivity : AppCompatActivity() {

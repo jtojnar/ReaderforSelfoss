@@ -1,12 +1,12 @@
 package apps.amine.bou.readerforselfoss.api.mercury
 
-
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+
 
 
 class MercuryApi(private val key: String) {
@@ -21,8 +21,13 @@ class MercuryApi(private val key: String) {
         val gson = GsonBuilder()
                 .setLenient()
                 .create()
-        val retrofit = Retrofit.Builder().baseUrl("https://mercury.postlight.com").client(client)
-                .addConverterFactory(GsonConverterFactory.create(gson)).build()
+        val retrofit =
+            Retrofit
+                .Builder()
+                .baseUrl("https://mercury.postlight.com")
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build()
         service = retrofit.create(MercuryService::class.java)
     }
 

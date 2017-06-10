@@ -6,6 +6,7 @@ import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 
 
+
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
