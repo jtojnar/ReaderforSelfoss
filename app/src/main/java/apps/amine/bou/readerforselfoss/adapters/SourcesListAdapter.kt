@@ -25,7 +25,7 @@ import apps.amine.bou.readerforselfoss.R
 import apps.amine.bou.readerforselfoss.api.selfoss.SelfossApi
 import apps.amine.bou.readerforselfoss.api.selfoss.Sources
 import apps.amine.bou.readerforselfoss.api.selfoss.SuccessResponse
-
+import apps.amine.bou.readerforselfoss.utils.texDrawableFromSource
 
 
 class SourcesListAdapter(private val app: Activity,
@@ -45,15 +45,13 @@ class SourcesListAdapter(private val app: Activity,
         val fHolder = holder
         if (itm.getIcon(c).isEmpty()) {
             val color = generator.getColor(itm.title)
-            val textDrawable = StringBuilder()
-            for (s in itm.title.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()) {
-                textDrawable.append(s[0])
-            }
 
-            val builder = TextDrawable.builder().round()
-
-            val drawable = builder.build(textDrawable.toString(), color)
-            holder.sourceImage!!.setImageDrawable(drawable)
+            val drawable =
+                TextDrawable
+                    .builder()
+                    .round()
+                    .build(texDrawableFromSource(itm.title), color)
+            holder.sourceImage.setImageDrawable(drawable)
         } else {
             Glide
                 .with(c)
@@ -64,12 +62,12 @@ class SourcesListAdapter(private val app: Activity,
                     override fun setResource(resource: Bitmap) {
                         val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(c.resources, resource)
                         circularBitmapDrawable.isCircular = true
-                        fHolder.sourceImage!!.setImageDrawable(circularBitmapDrawable)
+                        fHolder.sourceImage.setImageDrawable(circularBitmapDrawable)
                     }
                 })
         }
 
-        holder.sourceTitle!!.text = itm.title
+        holder.sourceTitle.text = itm.title
     }
 
     override fun getItemCount(): Int {
@@ -77,8 +75,8 @@ class SourcesListAdapter(private val app: Activity,
     }
 
     inner class ViewHolder(internal val mView: ConstraintLayout) : RecyclerView.ViewHolder(mView) {
-        var sourceImage: ImageView? = null
-        var sourceTitle: TextView? = null
+        lateinit var sourceImage: ImageView
+        lateinit var sourceTitle: TextView
 
         init {
 

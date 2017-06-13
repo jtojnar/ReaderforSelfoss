@@ -162,18 +162,21 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class LinksPreferenceFragment extends PreferenceFragment {
+        public void openUrl(Uri uri) {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(browserIntent);
+        }
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_links);
             setHasOptionsMenu(true);
 
-            Preference tracker = findPreference( "trackerLink" );
-            tracker.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            findPreference( "trackerLink" ).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.tracker_url)));
-                    startActivity(browserIntent);
+                    openUrl(Uri.parse(getString(R.string.tracker_url)));
                     return true;
                 }
             });
@@ -181,8 +184,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             findPreference("sourceLink").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.source_url)));
-                    startActivity(browserIntent);
+                    openUrl(Uri.parse(getString(R.string.source_url)));
                     return false;
                 }
             });

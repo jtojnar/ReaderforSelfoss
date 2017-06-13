@@ -537,7 +537,7 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
     private fun getUnRead() {
         elementsShown = UNREAD_SHOWN
-        doCallTo(R.string.cant_get_new_elements){t, id, f -> api.unreadItems(t, id, f)}
+        doCallTo(R.string.cant_get_new_elements){t, id, f -> api.newItems(t, id, f)}
     }
 
     private fun getRead() {

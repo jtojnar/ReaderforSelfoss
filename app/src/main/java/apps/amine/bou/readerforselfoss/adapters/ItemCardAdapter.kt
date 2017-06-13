@@ -35,11 +35,8 @@ import apps.amine.bou.readerforselfoss.R
 import apps.amine.bou.readerforselfoss.api.selfoss.Item
 import apps.amine.bou.readerforselfoss.api.selfoss.SelfossApi
 import apps.amine.bou.readerforselfoss.api.selfoss.SuccessResponse
-import apps.amine.bou.readerforselfoss.utils.buildCustomTabsIntent
+import apps.amine.bou.readerforselfoss.utils.*
 import apps.amine.bou.readerforselfoss.utils.customtabs.CustomTabActivityHelper
-import apps.amine.bou.readerforselfoss.utils.openInBrowser
-import apps.amine.bou.readerforselfoss.utils.openItemUrl
-import apps.amine.bou.readerforselfoss.utils.shareLink
 
 class ItemCardAdapter(private val app: Activity,
                       private val items: ArrayList<Item>,
@@ -93,14 +90,12 @@ class ItemCardAdapter(private val app: Activity,
         val fHolder = holder
         if (itm.getIcon(c).isEmpty()) {
             val color = generator.getColor(itm.sourcetitle)
-            val textDrawable = StringBuilder()
-            for (s in itm.sourcetitle.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()) {
-                textDrawable.append(s[0])
-            }
 
-            val builder = TextDrawable.builder().round()
-
-            val drawable = builder.build(textDrawable.toString(), color)
+            val drawable =
+                TextDrawable
+                    .builder()
+                    .round()
+                    .build(texDrawableFromSource(itm.sourcetitle), color)
             holder.sourceImage.setImageDrawable(drawable)
         } else {
 
