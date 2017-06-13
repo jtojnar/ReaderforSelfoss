@@ -2,10 +2,8 @@ package apps.amine.bou.readerforselfoss.adapters
 
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.net.Uri
 import android.support.constraint.ConstraintLayout
 import android.support.design.widget.Snackbar
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
@@ -39,7 +37,9 @@ import apps.amine.bou.readerforselfoss.api.selfoss.SelfossApi
 import apps.amine.bou.readerforselfoss.api.selfoss.SuccessResponse
 import apps.amine.bou.readerforselfoss.utils.buildCustomTabsIntent
 import apps.amine.bou.readerforselfoss.utils.customtabs.CustomTabActivityHelper
+import apps.amine.bou.readerforselfoss.utils.openInBrowser
 import apps.amine.bou.readerforselfoss.utils.openItemUrl
+import apps.amine.bou.readerforselfoss.utils.shareLink
 
 class ItemCardAdapter(private val app: Activity,
                       private val items: ArrayList<Item>,
@@ -221,21 +221,11 @@ class ItemCardAdapter(private val app: Activity,
             })
 
             shareBtn.setOnClickListener {
-                val i = items[adapterPosition]
-                val sendIntent = Intent()
-                sendIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                sendIntent.action = Intent.ACTION_SEND
-                sendIntent.putExtra(Intent.EXTRA_TEXT, i.getLinkDecoded())
-                sendIntent.type = "text/plain"
-                c.startActivity(Intent.createChooser(sendIntent, c.getString(R.string.share)).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                shareLink(items[adapterPosition].getLinkDecoded(), c)
             }
 
             browserBtn.setOnClickListener {
-                val i = items[adapterPosition]
-                val intent = Intent(Intent.ACTION_VIEW)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                intent.data = Uri.parse(i.getLinkDecoded())
-                c.startActivity(intent)
+                openInBrowser(items[adapterPosition], c)
             }
         }
 

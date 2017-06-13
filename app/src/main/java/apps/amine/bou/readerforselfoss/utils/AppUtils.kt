@@ -13,7 +13,7 @@ import okhttp3.HttpUrl
 
 import apps.amine.bou.readerforselfoss.BuildConfig
 import apps.amine.bou.readerforselfoss.R
-
+import apps.amine.bou.readerforselfoss.api.selfoss.Item
 
 
 fun checkAndDisplayStoreApk(context: Context) = {
@@ -102,4 +102,26 @@ fun longHash(string: String): Long {
         h = 31 * h + chars[i].toLong()
     }
     return h
+}
+
+fun handleLinksWithoutHttp(itemUrl: String) =
+    if (!itemUrl.startsWith("https://") && !itemUrl.startsWith("http://"))
+        "http://" + itemUrl
+    else
+        itemUrl
+
+fun shareLink(itemUrl: String, c: Context) {
+    val sendIntent = Intent()
+    sendIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+    sendIntent.action = Intent.ACTION_SEND
+    sendIntent.putExtra(Intent.EXTRA_TEXT, handleLinksWithoutHttp(itemUrl))
+    sendIntent.type = "text/plain"
+    c.startActivity(Intent.createChooser(sendIntent, c.getString(R.string.share)).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+}
+
+fun openInBrowser(i: Item, c: Context) {
+    val intent = Intent(Intent.ACTION_VIEW)
+    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+    intent.data = Uri.parse(handleLinksWithoutHttp(i.getLinkDecoded()))
+    c.startActivity(intent)
 }

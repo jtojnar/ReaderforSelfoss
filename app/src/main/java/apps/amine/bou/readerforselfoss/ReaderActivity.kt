@@ -22,7 +22,7 @@ import apps.amine.bou.readerforselfoss.api.mercury.MercuryApi
 import apps.amine.bou.readerforselfoss.api.mercury.ParsedContent
 import apps.amine.bou.readerforselfoss.utils.buildCustomTabsIntent
 import apps.amine.bou.readerforselfoss.utils.customtabs.CustomTabActivityHelper
-
+import apps.amine.bou.readerforselfoss.utils.shareLink
 
 
 class ReaderActivity : DragDismissActivity() {
@@ -73,12 +73,7 @@ class ReaderActivity : DragDismissActivity() {
                             .into(image)
 
                     shareBtn.setOnClickListener {
-                        val sendIntent = Intent()
-                        sendIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                        sendIntent.action = Intent.ACTION_SEND
-                        sendIntent.putExtra(Intent.EXTRA_TEXT, response.body()!!.url)
-                        sendIntent.type = "text/plain"
-                        startActivity(Intent.createChooser(sendIntent, getString(R.string.share)).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                        shareLink(response.body()!!.url, this@ReaderActivity)
                     }
 
                     browserBtn.setOnClickListener {
