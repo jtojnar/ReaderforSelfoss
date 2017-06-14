@@ -19,7 +19,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import apps.amine.bou.readerforselfoss.utils.Config
 
 
-
 // codebeat:disable[ARITY,TOO_MANY_FUNCTIONS]
 class SelfossApi(c: Context) {
 
@@ -28,27 +27,31 @@ class SelfossApi(c: Context) {
     private val userName: String
     private val password: String
 
-    init {
+    fun Credentials.createAuthenticator(): DispatchingAuthenticator =
+        DispatchingAuthenticator.Builder()
+            .with("digest", DigestAuthenticator(this))
+            .with("basic", BasicAuthenticator(this))
+            .build()
 
+    fun DispatchingAuthenticator.getHttpClien(): OkHttpClient {
         val authCache = ConcurrentHashMap<String, CachingAuthenticator>()
+        return OkHttpClient
+            .Builder()
+            .authenticator(CachingAuthenticatorDecorator(this, authCache))
+            .addInterceptor(AuthenticationCacheInterceptor(authCache))
+            .build()
+    }
 
-        val httpUserName = config.httpUserLogin
-        val httpPassword = config.httpUserPassword
-        val credentials = Credentials(httpUserName, httpPassword)
+
+    init {
         userName = config.userLogin
         password = config.userPassword
 
-        val authenticator = DispatchingAuthenticator.Builder()
-            .with("digest", DigestAuthenticator(credentials))
-            .with("basic", BasicAuthenticator(credentials))
-            .build()
-
-        val client =
-            OkHttpClient
-                .Builder()
-                .authenticator(CachingAuthenticatorDecorator(authenticator, authCache))
-                .addInterceptor(AuthenticationCacheInterceptor(authCache))
-                .build()
+        val authenticator =
+            Credentials(
+                config.httpUserLogin,
+                config.httpUserPassword
+            ).createAuthenticator()
 
         val gson =
             GsonBuilder()
@@ -56,12 +59,11 @@ class SelfossApi(c: Context) {
                 .setLenient()
                 .create()
 
-
         val retrofit =
             Retrofit
                 .Builder()
                 .baseUrl(config.baseUrl)
-                .client(client)
+                .client(authenticator.getHttpClien())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build()
         service = retrofit.create(SelfossService::class.java)
@@ -119,4 +121,5 @@ class SelfossApi(c: Context) {
         service.createSource(title, url, spout, tags, filter, userName, password)
 
 }
+
 // codebeat:enable[ARITY,TOO_MANY_FUNCTIONS]
