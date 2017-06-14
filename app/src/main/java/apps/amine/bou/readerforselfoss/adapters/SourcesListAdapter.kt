@@ -25,7 +25,7 @@ import apps.amine.bou.readerforselfoss.R
 import apps.amine.bou.readerforselfoss.api.selfoss.SelfossApi
 import apps.amine.bou.readerforselfoss.api.selfoss.Sources
 import apps.amine.bou.readerforselfoss.api.selfoss.SuccessResponse
-import apps.amine.bou.readerforselfoss.utils.texDrawableFromSource
+import apps.amine.bou.readerforselfoss.utils.toTextDrawableString
 
 
 class SourcesListAdapter(private val app: Activity,
@@ -50,7 +50,7 @@ class SourcesListAdapter(private val app: Activity,
                 TextDrawable
                     .builder()
                     .round()
-                    .build(texDrawableFromSource(itm.title), color)
+                    .build(itm.title.toTextDrawableString(), color)
             holder.sourceImage.setImageDrawable(drawable)
         } else {
             Glide

@@ -67,7 +67,7 @@ class AddSourceActivity : AppCompatActivity() {
 
         val config = Config(this)
 
-        if (config.baseUrl.isEmpty() || !isUrlValid(config.baseUrl)) {
+        if (config.baseUrl.isEmpty() || !config.baseUrl.isUrlValid()) {
             mustLoginToAddSource()
         } else {
 

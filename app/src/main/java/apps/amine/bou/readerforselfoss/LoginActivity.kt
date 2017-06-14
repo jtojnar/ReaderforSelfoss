@@ -60,7 +60,7 @@ class LoginActivity : AppCompatActivity() {
         if (settings.getString("url", "").isNotEmpty()) {
             goToMain()
         } else {
-            checkAndDisplayStoreApk(this@LoginActivity)
+            this@LoginActivity.checkAndDisplayStoreApk()
         }
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
@@ -132,7 +132,7 @@ class LoginActivity : AppCompatActivity() {
         var cancel = false
         var focusView: View? = null
 
-        if (!isUrlValid(url)) {
+        if (!url.isUrlValid()) {
             mUrlView.error = getString(R.string.login_url_problem)
             focusView = mUrlView
             cancel = true

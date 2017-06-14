@@ -52,7 +52,7 @@ class ReaderActivity : DragDismissActivity() {
         val shareBtn: ImageButton = v.findViewById(R.id.shareBtn) as ImageButton
 
 
-        val customTabsIntent = buildCustomTabsIntent(this@ReaderActivity)
+        val customTabsIntent = this@ReaderActivity.buildCustomTabsIntent()
         mCustomTabActivityHelper = CustomTabActivityHelper()
         mCustomTabActivityHelper.bindCustomTabsService(this)
 
@@ -73,7 +73,7 @@ class ReaderActivity : DragDismissActivity() {
                             .into(image)
 
                     shareBtn.setOnClickListener {
-                        shareLink(response.body()!!.url, this@ReaderActivity)
+                        this@ReaderActivity.shareLink(response.body()!!.url)
                     }
 
                     browserBtn.setOnClickListener {

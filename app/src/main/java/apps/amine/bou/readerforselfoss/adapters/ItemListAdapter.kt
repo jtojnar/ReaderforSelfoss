@@ -230,29 +230,28 @@ class ItemListAdapter(private val app: Activity,
             })
 
             shareBtn.setOnClickListener {
-                shareLink(items[adapterPosition].getLinkDecoded(), c)
+                c.shareLink(items[adapterPosition].getLinkDecoded())
             }
 
             browserBtn.setOnClickListener {
-                openInBrowser(items[adapterPosition], c)
+                c.openInBrowser(items[adapterPosition])
 
             }
         }
 
 
         private fun handleCustomTabActions() {
-            val customTabsIntent = buildCustomTabsIntent(c)
+            val customTabsIntent = c.buildCustomTabsIntent()
             helper.bindCustomTabsService(app)
 
 
             if (!clickBehavior) {
                 mView.setOnClickListener {
-                    openItemUrl(items[adapterPosition],
+                    c.openItemUrl(items[adapterPosition],
                         customTabsIntent,
                         internalBrowser,
                         articleViewer,
-                        app,
-                        c)
+                        app)
                 }
                 mView.setOnLongClickListener {
                     actionBarShowHide()
@@ -261,12 +260,11 @@ class ItemListAdapter(private val app: Activity,
             } else {
                 mView.setOnClickListener { actionBarShowHide() }
                 mView.setOnLongClickListener {
-                    openItemUrl(items[adapterPosition],
+                    c.openItemUrl(items[adapterPosition],
                         customTabsIntent,
                         internalBrowser,
                         articleViewer,
-                        app,
-                        c)
+                        app)
                     true
                 }
             }

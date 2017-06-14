@@ -17,56 +17,53 @@ import apps.amine.bou.readerforselfoss.utils.customtabs.CustomTabActivityHelper
 
 
 
-fun buildCustomTabsIntent(c: Context): CustomTabsIntent {
+fun Context.buildCustomTabsIntent(): CustomTabsIntent {
 
-    fun createPendingShareIntent(c: Context): PendingIntent {
-        val actionIntent = Intent(Intent.ACTION_SEND)
-        actionIntent.type = "text/plain"
-        return PendingIntent.getActivity(
-                c, 0, actionIntent, 0)
-    }
+    val actionIntent = Intent(Intent.ACTION_SEND)
+    actionIntent.type = "text/plain"
+    val createPendingShareIntent: PendingIntent = PendingIntent.getActivity(this, 0, actionIntent, 0)
+
 
     val intentBuilder = CustomTabsIntent.Builder()
 
     // TODO: change to primary when it's possible to customize custom tabs title color
     //intentBuilder.setToolbarColor(c.getResources().getColor(R.color.colorPrimary));
-    intentBuilder.setToolbarColor(c.resources.getColor(R.color.colorAccentDark))
+    intentBuilder.setToolbarColor(resources.getColor(R.color.colorAccentDark))
     intentBuilder.setShowTitle(true)
 
 
-    intentBuilder.setStartAnimations(c,
+    intentBuilder.setStartAnimations(this,
             R.anim.slide_in_right,
             R.anim.slide_out_left)
-    intentBuilder.setExitAnimations(c,
+    intentBuilder.setExitAnimations(this,
             android.R.anim.slide_in_left,
             android.R.anim.slide_out_right)
 
-    val closeicon = BitmapFactory.decodeResource(c.resources, R.drawable.ic_close_white_24dp)
+    val closeicon = BitmapFactory.decodeResource(resources, R.drawable.ic_close_white_24dp)
     intentBuilder.setCloseButtonIcon(closeicon)
 
-    val shareLabel = c.getString(R.string.label_share)
-    val icon = BitmapFactory.decodeResource(c.resources,
+    val shareLabel = this.getString(R.string.label_share)
+    val icon = BitmapFactory.decodeResource(resources,
             R.drawable.ic_share_white_24dp)
-    intentBuilder.setActionButton(icon, shareLabel, createPendingShareIntent(c))
+    intentBuilder.setActionButton(icon, shareLabel, createPendingShareIntent)
 
     return intentBuilder.build()
 }
 
-fun openItemUrl(i: Item,
+fun Context.openItemUrl(i: Item,
                 customTabsIntent: CustomTabsIntent,
                 internalBrowser: Boolean,
                 articleViewer: Boolean,
-                app: Activity,
-                c: Context) {
+                app: Activity) {
     if (!internalBrowser) {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.data = Uri.parse(i.getLinkDecoded())
         app.startActivity(intent)
     } else {
         if (articleViewer) {
-            val intent = Intent(c, ReaderActivity::class.java)
+            val intent = Intent(this, ReaderActivity::class.java)
 
-            DragDismissIntentBuilder(c)
+            DragDismissIntentBuilder(this)
                     .setFullscreenOnTablets(true)      // defaults to false, tablets will have padding on each side
                     .setDragElasticity(DragDismissIntentBuilder.DragElasticity.NORMAL)  // Larger elasticities will make it easier to dismiss.
                     .build(intent)
@@ -78,7 +75,7 @@ fun openItemUrl(i: Item,
             ) { _, uri ->
                 val intent = Intent(Intent.ACTION_VIEW, uri)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                c.startActivity(intent)
+                startActivity(intent)
             }
         }
     }

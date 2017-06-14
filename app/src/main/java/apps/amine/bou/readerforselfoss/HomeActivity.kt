@@ -197,7 +197,7 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
         ItemTouchHelper(simpleItemTouchCallback).attachToRecyclerView(mRecyclerView)
 
-        checkAndDisplayStoreApk(this@HomeActivity)
+        this@HomeActivity.checkAndDisplayStoreApk()
 
     }
 
@@ -212,7 +212,7 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         editor = settings.edit()
 
         if (BuildConfig.GITHUB_VERSION) {
-            checkApkVersion(settings, editor, this@HomeActivity, mFirebaseRemoteConfig)
+            this@HomeActivity.checkApkVersion(settings, editor, mFirebaseRemoteConfig)
         }
 
         handleSharedPrefs()
@@ -317,7 +317,7 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
                         drawer.addItem(
                             PrimaryDrawerItem()
                                 .withName(tag.tag)
-                                .withIdentifier(longHash(tag.tag))
+                                .withIdentifier(tag.tag.longHash())
                                 .withIcon(gd)
                                 .withBadge("${tag.unread}")
                                 .withBadgeStyle(

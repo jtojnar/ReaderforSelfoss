@@ -95,7 +95,7 @@ class ItemCardAdapter(private val app: Activity,
                 TextDrawable
                     .builder()
                     .round()
-                    .build(texDrawableFromSource(itm.sourcetitle), color)
+                    .build(itm.sourcetitle.toTextDrawableString(), color)
             holder.sourceImage.setImageDrawable(drawable)
         } else {
 
@@ -216,25 +216,24 @@ class ItemCardAdapter(private val app: Activity,
             })
 
             shareBtn.setOnClickListener {
-                shareLink(items[adapterPosition].getLinkDecoded(), c)
+                c.shareLink(items[adapterPosition].getLinkDecoded())
             }
 
             browserBtn.setOnClickListener {
-                openInBrowser(items[adapterPosition], c)
+                c.openInBrowser(items[adapterPosition])
             }
         }
 
         private fun handleCustomTabActions() {
-            val customTabsIntent = buildCustomTabsIntent(c)
+            val customTabsIntent = c.buildCustomTabsIntent()
             helper.bindCustomTabsService(app)
 
             mView.setOnClickListener {
-                openItemUrl(items[adapterPosition],
+                c.openItemUrl(items[adapterPosition],
                     customTabsIntent,
                     internalBrowser,
                     articleViewer,
-                    app,
-                    c)
+                    app)
             }
         }
     }

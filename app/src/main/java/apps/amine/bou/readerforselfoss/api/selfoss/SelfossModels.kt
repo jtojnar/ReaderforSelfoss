@@ -14,7 +14,7 @@ private fun constructUrl(config: Config?, path: String, file: String): String {
     val baseUriBuilder = Uri.parse(config!!.baseUrl).buildUpon()
     baseUriBuilder.appendPath(path).appendPath(file)
 
-    return if (isEmptyOrNullOrNullString(file)) ""
+    return if (file.isEmptyOrNullOrNullString()) ""
     else baseUriBuilder.toString()
 }
 
