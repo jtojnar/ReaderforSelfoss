@@ -2,9 +2,7 @@ package apps.amine.bou.readerforselfoss.adapters
 
 import android.app.Activity
 import android.content.Context
-import android.graphics.Bitmap
 import android.support.constraint.ConstraintLayout
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -15,8 +13,6 @@ import android.widget.Toast
 
 import com.amulyakhare.textdrawable.TextDrawable
 import com.amulyakhare.textdrawable.util.ColorGenerator
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.BitmapImageViewTarget
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -25,6 +21,7 @@ import apps.amine.bou.readerforselfoss.R
 import apps.amine.bou.readerforselfoss.api.selfoss.SelfossApi
 import apps.amine.bou.readerforselfoss.api.selfoss.Sources
 import apps.amine.bou.readerforselfoss.api.selfoss.SuccessResponse
+import apps.amine.bou.readerforselfoss.utils.circularBitmapDrawable
 import apps.amine.bou.readerforselfoss.utils.toTextDrawableString
 
 
@@ -42,7 +39,6 @@ class SourcesListAdapter(private val app: Activity,
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val itm = items[position]
 
-        val fHolder = holder
         if (itm.getIcon(c).isEmpty()) {
             val color = generator.getColor(itm.title)
 
@@ -53,18 +49,7 @@ class SourcesListAdapter(private val app: Activity,
                     .build(itm.title.toTextDrawableString(), color)
             holder.sourceImage.setImageDrawable(drawable)
         } else {
-            Glide
-                .with(c)
-                .load(itm.getIcon(c))
-                .asBitmap()
-                .centerCrop()
-                .into(object : BitmapImageViewTarget(holder.sourceImage) {
-                    override fun setResource(resource: Bitmap) {
-                        val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(c.resources, resource)
-                        circularBitmapDrawable.isCircular = true
-                        fHolder.sourceImage.setImageDrawable(circularBitmapDrawable)
-                    }
-                })
+            c.circularBitmapDrawable(itm.getIcon(c), holder.sourceImage)
         }
 
         holder.sourceTitle.text = itm.title

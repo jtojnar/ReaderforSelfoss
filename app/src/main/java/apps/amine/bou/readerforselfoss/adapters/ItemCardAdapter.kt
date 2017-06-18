@@ -60,30 +60,16 @@ class ItemCardAdapter(private val app: Activity,
         holder.saveBtn.isLiked = itm.starred
         holder.title.text = Html.fromHtml(itm.title)
 
-        var sourceAndDate = itm.sourcetitle
-        val d: Long
-        try {
-            d = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(itm.datetime).time
-            sourceAndDate += " " + DateUtils.getRelativeTimeSpanString(
-                    d,
-                    Date().time,
-                    DateUtils.MINUTE_IN_MILLIS,
-                    DateUtils.FORMAT_ABBREV_RELATIVE
-            )
-        } catch (e: ParseException) {
-            e.printStackTrace()
-        }
-
-        holder.sourceTitleAndDate.text = sourceAndDate
+        holder.sourceTitleAndDate.text = itm.sourceAndDateText()
 
         if (itm.getThumbnail(c).isEmpty()) {
             Glide.clear(holder.itemImage)
             holder.itemImage.setImageDrawable(null)
         } else {
             if (fullHeightCards) {
-                Glide.with(c).load(itm.getThumbnail(c)).asBitmap().fitCenter().into(holder.itemImage)
+                c.bitmapFitCenter(itm.getThumbnail(c), holder.itemImage)
             } else {
-                Glide.with(c).load(itm.getThumbnail(c)).asBitmap().centerCrop().into(holder.itemImage)
+                c.bitmapCenterCrop(itm.getThumbnail(c), holder.itemImage)
             }
         }
 
@@ -98,14 +84,7 @@ class ItemCardAdapter(private val app: Activity,
                     .build(itm.sourcetitle.toTextDrawableString(), color)
             holder.sourceImage.setImageDrawable(drawable)
         } else {
-
-            Glide.with(c).load(itm.getIcon(c)).asBitmap().centerCrop().into(object : BitmapImageViewTarget(holder.sourceImage) {
-                override fun setResource(resource: Bitmap) {
-                    val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(c.resources, resource)
-                    circularBitmapDrawable.isCircular = true
-                    fHolder.sourceImage.setImageDrawable(circularBitmapDrawable)
-                }
-            })
+            c.circularBitmapDrawable(itm.getIcon(c), holder.sourceImage)
         }
 
         holder.saveBtn.isLiked = itm.starred

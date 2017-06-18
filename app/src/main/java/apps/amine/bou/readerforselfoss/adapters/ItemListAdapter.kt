@@ -36,11 +36,8 @@ import apps.amine.bou.readerforselfoss.R
 import apps.amine.bou.readerforselfoss.api.selfoss.Item
 import apps.amine.bou.readerforselfoss.api.selfoss.SelfossApi
 import apps.amine.bou.readerforselfoss.api.selfoss.SuccessResponse
-import apps.amine.bou.readerforselfoss.utils.buildCustomTabsIntent
+import apps.amine.bou.readerforselfoss.utils.*
 import apps.amine.bou.readerforselfoss.utils.customtabs.CustomTabActivityHelper
-import apps.amine.bou.readerforselfoss.utils.openInBrowser
-import apps.amine.bou.readerforselfoss.utils.openItemUrl
-import apps.amine.bou.readerforselfoss.utils.shareLink
 
 
 class ItemListAdapter(private val app: Activity,
@@ -66,21 +63,7 @@ class ItemListAdapter(private val app: Activity,
         holder.saveBtn.isLiked = itm.starred
         holder.title.text = Html.fromHtml(itm.title)
 
-        var sourceAndDate = itm.sourcetitle
-        val d: Long
-        try {
-            d = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(itm.datetime).time
-            sourceAndDate += " " + DateUtils.getRelativeTimeSpanString(
-                d,
-                Date().time,
-                DateUtils.MINUTE_IN_MILLIS,
-                DateUtils.FORMAT_ABBREV_RELATIVE
-            )
-        } catch (e: ParseException) {
-            e.printStackTrace()
-        }
-
-        holder.sourceTitleAndDate.text = sourceAndDate
+        holder.sourceTitleAndDate.text = itm.sourceAndDateText()
 
         if (itm.getThumbnail(c).isEmpty()) {
             val sizeInInt = 46
@@ -111,18 +94,10 @@ class ItemListAdapter(private val app: Activity,
                 val drawable = builder.build(textDrawable.toString(), color)
                 holder.sourceImage.setImageDrawable(drawable)
             } else {
-
-                val fHolder = holder
-                Glide.with(c).load(itm.getIcon(c)).asBitmap().centerCrop().into(object : BitmapImageViewTarget(holder.sourceImage) {
-                    override fun setResource(resource: Bitmap) {
-                        val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(c.resources, resource)
-                        circularBitmapDrawable.isCircular = true
-                        fHolder.sourceImage.setImageDrawable(circularBitmapDrawable)
-                    }
-                })
+                c.circularBitmapDrawable(itm.getIcon(c), holder.sourceImage)
             }
         } else {
-            Glide.with(c).load(itm.getThumbnail(c)).asBitmap().centerCrop().into(holder.sourceImage)
+            c.bitmapCenterCrop(itm.getThumbnail(c), holder.sourceImage)
         }
 
         if (bars[position]) holder.actionBar.visibility = View.VISIBLE else holder.actionBar.visibility = View.GONE
