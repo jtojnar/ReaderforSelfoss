@@ -88,7 +88,7 @@ class CustomUrlPrimaryDrawerItem : CustomUrlBasePrimaryDrawerItem<CustomUrlPrima
 
     class ViewHolder(view: View) : CustomBaseViewHolder(view) {
         val badgeContainer: View = view.findViewById(R.id.material_drawer_badge_container)
-        val badge: TextView = view.findViewById(R.id.material_drawer_badge) as TextView
+        val badge: TextView = view.findViewById(R.id.material_drawer_badge)
 
     }
 }

@@ -127,7 +127,7 @@ class ItemListAdapter(private val app: Activity,
                 }
 
         val view = s.view
-        val tv = view.findViewById(android.support.design.R.id.snackbar_text) as TextView
+        val tv: TextView = view.findViewById(android.support.design.R.id.snackbar_text)
         tv.setTextColor(Color.WHITE)
         s.show()
     }
@@ -169,13 +169,13 @@ class ItemListAdapter(private val app: Activity,
         }
 
         private fun handleClickListeners() {
-            actionBar = mView.findViewById(R.id.actionBar) as RelativeLayout
-            sourceImage = mView.findViewById(R.id.itemImage) as ImageView
-            title = mView.findViewById(R.id.title) as TextView
-            sourceTitleAndDate = mView.findViewById(R.id.sourceTitleAndDate) as TextView
-            saveBtn = mView.findViewById(R.id.favButton) as LikeButton
-            shareBtn = mView.findViewById(R.id.shareBtn) as ImageButton
-            browserBtn = mView.findViewById(R.id.browserBtn) as ImageButton
+            actionBar = mView.findViewById(R.id.actionBar)
+            sourceImage = mView.findViewById(R.id.itemImage)
+            title = mView.findViewById(R.id.title)
+            sourceTitleAndDate = mView.findViewById(R.id.sourceTitleAndDate)
+            saveBtn = mView.findViewById(R.id.favButton)
+            shareBtn = mView.findViewById(R.id.shareBtn)
+            browserBtn = mView.findViewById(R.id.browserBtn)
 
 
             saveBtn.setOnLikeListener(object : OnLikeListener {

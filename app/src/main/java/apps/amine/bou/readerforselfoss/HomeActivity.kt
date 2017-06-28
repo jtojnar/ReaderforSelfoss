@@ -116,11 +116,11 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        toolbar = findViewById(R.id.toolbar) as Toolbar
+        toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
         if (savedInstanceState == null) {
-            val promptView = findViewById(R.id.prompt_view) as DefaultLayoutPromptView
+            val promptView: DefaultLayoutPromptView = findViewById(R.id.prompt_view)
             Amplify.getSharedInstance().promptIfReady(promptView)
         }
 
@@ -132,7 +132,7 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         api = SelfossApi(this)
         items = ArrayList()
 
-        mBottomBar = findViewById(R.id.bottomBar) as BottomBar
+        mBottomBar = findViewById(R.id.bottomBar)
 
         handleDrawer()
 
@@ -153,9 +153,9 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
             }
         }
 
-        mCoordinatorLayout = findViewById(R.id.coordLayout) as CoordinatorLayout
-        mSwipeRefreshLayout = findViewById(R.id.swipeRefreshLayout) as SwipeRefreshLayout
-        mRecyclerView = findViewById(R.id.my_recycler_view) as RecyclerView
+        mCoordinatorLayout = findViewById(R.id.coordLayout)
+        mSwipeRefreshLayout = findViewById(R.id.swipeRefreshLayout)
+        mRecyclerView = findViewById(R.id.my_recycler_view)
 
         reloadLayoutManager()
 

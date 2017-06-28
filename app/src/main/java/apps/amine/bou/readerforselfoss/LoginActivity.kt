@@ -64,21 +64,21 @@ class LoginActivity : AppCompatActivity() {
         }
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
-        mUrlView = findViewById(R.id.url) as EditText
-        mLoginView = findViewById(R.id.login) as TextView
-        mHTTPLoginView = findViewById(R.id.httpLogin) as TextView
-        mPasswordView = findViewById(R.id.password) as EditText
-        mHTTPPasswordView = findViewById(R.id.httpPassword) as EditText
+        mUrlView = findViewById(R.id.url)
+        mLoginView = findViewById(R.id.login)
+        mHTTPLoginView = findViewById(R.id.httpLogin)
+        mPasswordView = findViewById(R.id.password)
+        mHTTPPasswordView = findViewById(R.id.httpPassword)
         mLoginFormView = findViewById(R.id.login_form)
         mProgressView = findViewById(R.id.login_progress)
 
-        val mSwitch = findViewById(R.id.withLogin) as Switch
-        val mHTTPSwitch = findViewById(R.id.withHttpLogin) as Switch
-        val mLoginLayout = findViewById(R.id.loginLayout) as TextInputLayout
-        val mHTTPLoginLayout = findViewById(R.id.httpLoginInput) as TextInputLayout
-        val mPasswordLayout = findViewById(R.id.passwordLayout) as TextInputLayout
-        val mHTTPPasswordLayout = findViewById(R.id.httpPasswordInput) as TextInputLayout
-        val mEmailSignInButton = findViewById(R.id.email_sign_in_button) as Button
+        val mSwitch: Switch = findViewById(R.id.withLogin)
+        val mHTTPSwitch: Switch = findViewById(R.id.withHttpLogin)
+        val mLoginLayout: TextInputLayout = findViewById(R.id.loginLayout)
+        val mHTTPLoginLayout: TextInputLayout = findViewById(R.id.httpLoginInput)
+        val mPasswordLayout: TextInputLayout = findViewById(R.id.passwordLayout)
+        val mHTTPPasswordLayout: TextInputLayout = findViewById(R.id.httpPasswordInput)
+        val mEmailSignInButton: Button = findViewById(R.id.email_sign_in_button)
 
         mPasswordView.setOnEditorActionListener(TextView.OnEditorActionListener { _, id, _ ->
             if (id == R.id.login || id == EditorInfo.IME_NULL) {

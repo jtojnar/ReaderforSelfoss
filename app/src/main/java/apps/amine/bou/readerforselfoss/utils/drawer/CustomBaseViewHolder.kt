@@ -11,7 +11,7 @@ import apps.amine.bou.readerforselfoss.R
 
 
 open class CustomBaseViewHolder(var view: View) : RecyclerView.ViewHolder(view) {
-    var icon: ImageView = view.findViewById(R.id.material_drawer_icon) as ImageView
-    var name: TextView = view.findViewById(R.id.material_drawer_name) as TextView
-    var description: TextView = view.findViewById(R.id.material_drawer_description) as TextView
+    var icon: ImageView = view.findViewById(R.id.material_drawer_icon)
+    var name: TextView = view.findViewById(R.id.material_drawer_name)
+    var description: TextView = view.findViewById(R.id.material_drawer_description)
 }

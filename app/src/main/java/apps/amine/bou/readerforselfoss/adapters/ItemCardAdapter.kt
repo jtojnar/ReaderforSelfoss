@@ -113,7 +113,7 @@ class ItemCardAdapter(private val app: Activity,
                 }
 
         val view = s.view
-        val tv = view.findViewById(android.support.design.R.id.snackbar_text) as TextView
+        val tv: TextView = view.findViewById(android.support.design.R.id.snackbar_text)
         tv.setTextColor(Color.WHITE)
         s.show()
     }
@@ -155,13 +155,13 @@ class ItemCardAdapter(private val app: Activity,
         }
 
         private fun handleClickListeners() {
-            sourceImage = mView.findViewById(R.id.sourceImage) as ImageView
-            itemImage = mView.findViewById(R.id.itemImage) as ImageView
-            title = mView.findViewById(R.id.title) as TextView
-            sourceTitleAndDate = mView.findViewById(R.id.sourceTitleAndDate) as TextView
-            saveBtn = mView.findViewById(R.id.favButton) as LikeButton
-            shareBtn = mView.findViewById(R.id.shareBtn) as ImageButton
-            browserBtn = mView.findViewById(R.id.browserBtn) as ImageButton
+            sourceImage = mView.findViewById(R.id.sourceImage)
+            itemImage = mView.findViewById(R.id.itemImage)
+            title = mView.findViewById(R.id.title)
+            sourceTitleAndDate = mView.findViewById(R.id.sourceTitleAndDate)
+            saveBtn = mView.findViewById(R.id.favButton)
+            shareBtn = mView.findViewById(R.id.shareBtn)
+            browserBtn = mView.findViewById(R.id.browserBtn)
 
             if (!fullHeightCards) {
                 itemImage.maxHeight = c.resources.getDimension(R.dimen.card_image_max_height).toInt()
