@@ -11,21 +11,9 @@ This is the repo of [Reader For Selfoss](https://play.google.com/store/apps/deta
 It's an RSS Reader for Android, that **only** works with [Selfoss](https://selfoss.aditu.de/)
 
 
-## Build
+## Want to help ?
 
-You can directly import this project into IntellIJ/Android Studio.
-
-You'll have to:
-
-- [Create your own launcher icon](https://developer.android.com/studio/write/image-asset-studio.html#creating-launcher)
-
-- Configure Fabric, or [remove it](https://docs.fabric.io/android/fabric/settings/removing.html#).
-- Define the following in `res/values/strings.xml` or create `res/values/secrets.xml`
-
-    - mercury: A [Mercury](https://mercury.postlight.com/web-parser/) web parser api key for the internal browser
-    - feedback_email: An email to receive users  feedback.
-    - source_url: an url to the source code, used in the settings
-    - tracker_url: an url to the tracker, used in the settings
+Check the [Contribution guide](https://github.com/aminecmi/ReaderforSelfoss/blob/master/CONTRIBUTING.md)
 
 ## Useful links
 
