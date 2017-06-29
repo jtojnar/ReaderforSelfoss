@@ -13,7 +13,7 @@ It's an RSS Reader for Android, that **only** works with [Selfoss](https://selfo
 
 ## Want to help ?
 
-Check the [Contribution guide](https://github.com/aminecmi/ReaderforSelfoss/blob/master/CONTRIBUTING.md)
+Check the [Contribution guide](https://github.com/aminecmi/ReaderforSelfoss/blob/master/.github/CONTRIBUTING.md)
 
 ## Useful links
 
