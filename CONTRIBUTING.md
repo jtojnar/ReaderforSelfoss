@@ -37,3 +37,19 @@ Always check if the web version of your instance is working.
 * Always reference the issue you are working on in your PR description.
 * Be willing to accept criticism on your PRs (as I am on mine).
 * Remember that PR review can take time.
+
+# Build the project
+
+You can directly import this project into IntellIJ/Android Studio.
+
+You'll have to:
+
+- [Create your own launcher icon](https://developer.android.com/studio/write/image-asset-studio.html#creating-launcher)
+
+- Configure Fabric, or [remove it](https://docs.fabric.io/android/fabric/settings/removing.html#).
+- Define the following in `res/values/strings.xml` or create `res/values/secrets.xml`
+
+    - mercury: A [Mercury](https://mercury.postlight.com/web-parser/) web parser api key for the internal browser
+    - feedback_email: An email to receive users  feedback.
+    - source_url: an url to the source code, used in the settings
+    - tracker_url: an url to the tracker, used in the settings
