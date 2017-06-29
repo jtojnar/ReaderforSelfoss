@@ -30,7 +30,7 @@ Always check if the web version of your instance is working.
 * Please ask before starting to work on an issue. I may be working on it, or someone else could be doing so.
 * Each pull request should implement **ONE** feature or bugfix. Keep in mind that you can submit as many PR as you want.
 * Your code must be simple and clear enough to avoid using comments to explain what it does.
-* Follow the used coding style (not defined yet)
+* Follow the used coding style [the official one](https://kotlinlang.org/docs/reference/coding-conventions.html) ([some idoms for reference](http://kotlinlang.org/docs/reference/idioms.html)) with more to come.
 * Try as much as possible to write a test for your feature, and if you do so, run it, and make it work.
 * Always check your changes and discard the ones that are irrelevant to your feature or bugfix.
 * Have meaningful commit messages.
