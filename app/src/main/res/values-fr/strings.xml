@@ -115,4 +115,8 @@
     <string name="drawer_loading">Chargement …</string>
     <string name="menu_home_search">Rechercher</string>
     <string name="can_delete_source">Petit soucis lors de la suppression de la source.</string>
+    <string name="color_primary">Couleur primaire</string>
+    <string name="pref_header_theme">Thème</string>
+    <string name="color_primary_dark">Couleur primaire sombre</string>
+    <string name="color_accent">Couleur secondaire</string>
 </resources>
