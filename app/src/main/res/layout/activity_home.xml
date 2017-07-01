@@ -9,6 +9,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.github.stkent.amplify.prompt.DefaultLayoutPromptView
+        android:tag=":aesthetic_ignore"
         android:id="@+id/prompt_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

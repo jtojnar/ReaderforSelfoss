@@ -52,16 +52,14 @@ import apps.amine.bou.readerforselfoss.adapters.ItemCardAdapter
 import apps.amine.bou.readerforselfoss.adapters.ItemListAdapter
 import apps.amine.bou.readerforselfoss.api.selfoss.*
 import apps.amine.bou.readerforselfoss.settings.SettingsActivity
-import apps.amine.bou.readerforselfoss.utils.Config
-import apps.amine.bou.readerforselfoss.utils.checkAndDisplayStoreApk
-import apps.amine.bou.readerforselfoss.utils.checkApkVersion
+import apps.amine.bou.readerforselfoss.utils.*
 import apps.amine.bou.readerforselfoss.utils.customtabs.CustomTabActivityHelper
 import apps.amine.bou.readerforselfoss.utils.drawer.CustomUrlPrimaryDrawerItem
-import apps.amine.bou.readerforselfoss.utils.longHash
+import com.afollestad.aesthetic.Aesthetic
+import com.afollestad.aesthetic.AestheticActivity
 
 
-
-class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
+class HomeActivity : AestheticActivity(), SearchView.OnQueryTextListener {
 
     private val MENU_PREFERENCES = 12302
     private val REQUEST_INVITE = 13231
@@ -115,6 +113,15 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
+        if (Aesthetic.isFirstTime()) {
+            Aesthetic.get()
+                .colorPrimaryRes(R.color.colorPrimary)
+                .colorPrimaryDarkRes(R.color.colorPrimaryDark)
+                .colorAccentRes(R.color.colorAccent)
+                .apply()
+        }
+
 
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
