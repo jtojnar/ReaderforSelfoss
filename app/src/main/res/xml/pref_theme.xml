@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <com.jrummyapps.android.colorpicker.ColorPreference
+        android:defaultValue="?colorPrimary"
+        android:key="primary_color"
+        android:title="@string/color_primary"/>
+
+    <com.jrummyapps.android.colorpicker.ColorPreference
+        android:defaultValue="?colorPrimaryDark"
+        android:key="primary_color_dark"
+        android:title="@string/color_primary_dark"/>
+
+    <com.jrummyapps.android.colorpicker.ColorPreference
+        android:defaultValue="@color/colorAccent"
+        android:key="accent_color"
+        android:title="@string/color_accent"/>
+
+</PreferenceScreen>
