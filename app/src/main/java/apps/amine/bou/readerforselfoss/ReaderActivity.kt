@@ -42,14 +42,14 @@ class ReaderActivity : DragDismissActivity() {
         val v = inflater.inflate(R.layout.activity_reader, parent, false)
         showProgressBar()
 
-        val image = v.findViewById(R.id.imageView) as ImageView
-        val source = v.findViewById(R.id.source) as TextView
-        val title = v.findViewById(R.id.title) as TextView
-        val content = v.findViewById(R.id.content) as HtmlTextView
+        val image: ImageView = v.findViewById(R.id.imageView)
+        val source: TextView = v.findViewById(R.id.source)
+        val title: TextView = v.findViewById(R.id.title)
+        val content: HtmlTextView = v.findViewById(R.id.content)
         val url = intent.getStringExtra("url")
         val parser = MercuryApi(getString(R.string.mercury))
-        val browserBtn: ImageButton = v.findViewById(R.id.browserBtn) as ImageButton
-        val shareBtn: ImageButton = v.findViewById(R.id.shareBtn) as ImageButton
+        val browserBtn: ImageButton = v.findViewById(R.id.browserBtn)
+        val shareBtn: ImageButton = v.findViewById(R.id.shareBtn)
 
 
         val customTabsIntent = this@ReaderActivity.buildCustomTabsIntent()

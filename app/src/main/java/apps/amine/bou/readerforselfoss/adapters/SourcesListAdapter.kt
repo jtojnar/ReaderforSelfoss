@@ -69,10 +69,10 @@ class SourcesListAdapter(private val app: Activity,
         }
 
         private fun handleClickListeners() {
-            sourceImage = mView.findViewById(R.id.itemImage) as ImageView
-            sourceTitle = mView.findViewById(R.id.sourceTitle) as TextView
+            sourceImage = mView.findViewById(R.id.itemImage)
+            sourceTitle = mView.findViewById(R.id.sourceTitle)
 
-            val deleteBtn = mView.findViewById(R.id.deleteBtn) as Button
+            val deleteBtn: Button = mView.findViewById(R.id.deleteBtn)
 
             deleteBtn.setOnClickListener {
                 val (id) = items[adapterPosition]

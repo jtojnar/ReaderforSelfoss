@@ -27,13 +27,13 @@ class AddSourceActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_source)
 
-        val mProgress = findViewById(R.id.progress) as ProgressBar
-        val mForm = findViewById(R.id.formContainer) as ConstraintLayout
-        val mNameInput = findViewById(R.id.nameInput) as EditText
-        val mSourceUri = findViewById(R.id.sourceUri) as EditText
-        val mTags = findViewById(R.id.tags) as EditText
-        val mSpoutsSpinner = findViewById(R.id.spoutsSpinner) as Spinner
-        val mSaveBtn = findViewById(R.id.saveBtn) as Button
+        val mProgress: ProgressBar = findViewById(R.id.progress)
+        val mForm: ConstraintLayout = findViewById(R.id.formContainer)
+        val mNameInput: EditText = findViewById(R.id.nameInput)
+        val mSourceUri: EditText = findViewById(R.id.sourceUri)
+        val mTags: EditText = findViewById(R.id.tags)
+        val mSpoutsSpinner: Spinner = findViewById(R.id.spoutsSpinner)
+        val mSaveBtn: Button = findViewById(R.id.saveBtn)
         var api: SelfossApi? = null
 
         try {

@@ -27,8 +27,8 @@ class SourcesActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        val mFab = findViewById(R.id.fab) as FloatingActionButton
-        val mRecyclerView = findViewById(R.id.activity_sources) as RecyclerView
+        val mFab: FloatingActionButton = findViewById(R.id.fab)
+        val mRecyclerView: RecyclerView = findViewById(R.id.activity_sources)
         val mLayoutManager = LinearLayoutManager(this)
         val api = SelfossApi(this, this@SourcesActivity)
         var items: ArrayList<Sources> = ArrayList()
