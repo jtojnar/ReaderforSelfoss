@@ -1,3 +1,22 @@
+**1.5.1.2**
+
+- Added testing to the CI.
+
+- Code cleaning
+
+- Display the pull to refresh loader on api call
+
+- Fixes :
+
+  - Can't pull down to refresh on first launch
+
+  - Recurring crash because of the url
+
+  - Couldn't open some urls because of missing "http"
+
+  - Adding a source with invalid url would crash
+
+
 **1.5.1.1**
 
 - Fixed an issue when trying to add a source without being logged in.
