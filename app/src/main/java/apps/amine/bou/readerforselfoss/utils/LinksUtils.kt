@@ -51,10 +51,10 @@ fun Context.buildCustomTabsIntent(): CustomTabsIntent {
 }
 
 fun Context.openItemUrl(i: Item,
-                customTabsIntent: CustomTabsIntent,
-                internalBrowser: Boolean,
-                articleViewer: Boolean,
-                app: Activity) {
+                        customTabsIntent: CustomTabsIntent,
+                        internalBrowser: Boolean,
+                        articleViewer: Boolean,
+                        app: Activity) {
     if (!internalBrowser) {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.data = Uri.parse(i.getLinkDecoded())

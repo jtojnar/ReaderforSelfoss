@@ -62,8 +62,13 @@ class ReaderActivity : DragDismissActivity() {
                 if (response.body() != null && response.body()!!.content != null && response.body()!!.content.isNotEmpty()) {
                     source.text = response.body()!!.domain
                     title.text = response.body()!!.title
-                    if (response.body()!!.content != null && !response.body()!!.content.isEmpty())
-                        content.setHtml(response.body()!!.content, HtmlHttpImageGetter(content, null, true))
+                    if (response.body()!!.content != null && !response.body()!!.content.isEmpty()) {
+                        try {
+                            content.setHtml(response.body()!!.content, HtmlHttpImageGetter(content, null, true))
+                        } catch (e: IndexOutOfBoundsException) {
+                            openInBrowserAfterFailing()
+                        }
+                    }
                     if (response.body()!!.lead_image_url != null && !response.body()!!.lead_image_url.isEmpty())
                         Glide
                             .with(applicationContext)
@@ -84,12 +89,12 @@ class ReaderActivity : DragDismissActivity() {
                     }
 
                     hideProgressBar()
-                } else errorAfterMercuryCall()
+                } else openInBrowserAfterFailing()
             }
 
-            override fun onFailure(call: Call<ParsedContent>, t: Throwable) = errorAfterMercuryCall()
+            override fun onFailure(call: Call<ParsedContent>, t: Throwable) = openInBrowserAfterFailing()
 
-            private fun errorAfterMercuryCall() {
+            private fun openInBrowserAfterFailing() {
                 CustomTabActivityHelper.openCustomTab(this@ReaderActivity, customTabsIntent, Uri.parse(url)
                 ) { _, uri ->
                     val intent = Intent(Intent.ACTION_VIEW, uri)
