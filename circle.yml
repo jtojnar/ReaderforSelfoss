@@ -40,8 +40,6 @@ dependencies:
 
 test:
   override:
-    - (TERM="dumb" ./gradlew assemble --configure-on-demand --no-daemon -P crashlyticsdemoApikey=$FABRIC_API_KEY -P crashlyticsdemoApisecret=$FABRIC_API_SECRET -P appLoginUrl=$LOGIN_URL -P appLoginUsername=$LOGIN_USER_NAME -P appLoginPassword=$LOGIN_PASSWORD -PdisablePreDex -Pandroid.threadPoolSize=1 -Porg.gradle.parallel=false):
-        timeout: 720
     - emulator -avd circleci-android22 -no-window:
         background: true
         parallel: true
