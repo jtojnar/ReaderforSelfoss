@@ -1,6 +1,12 @@
 package apps.amine.bou.readerforselfoss.api.selfoss
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.support.v7.app.AlertDialog
+import android.widget.Toast
+import apps.amine.bou.readerforselfoss.LoginActivity
+import apps.amine.bou.readerforselfoss.R
 import java.util.concurrent.ConcurrentHashMap
 
 import com.burgstaller.okhttp.AuthenticationCacheInterceptor
@@ -20,9 +26,9 @@ import apps.amine.bou.readerforselfoss.utils.Config
 
 
 // codebeat:disable[ARITY,TOO_MANY_FUNCTIONS]
-class SelfossApi(c: Context) {
+class SelfossApi(c: Context, callingActivity: Activity) {
 
-    private val service: SelfossService
+    private lateinit var service: SelfossService
     private val config: Config = Config(c)
     private val userName: String
     private val password: String
@@ -59,14 +65,19 @@ class SelfossApi(c: Context) {
                 .setLenient()
                 .create()
 
-        val retrofit =
-            Retrofit
-                .Builder()
-                .baseUrl(config.baseUrl)
-                .client(authenticator.getHttpClien())
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build()
-        service = retrofit.create(SelfossService::class.java)
+
+        try {
+            val retrofit =
+                Retrofit
+                    .Builder()
+                    .baseUrl(config.baseUrl)
+                    .client(authenticator.getHttpClien())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .build()
+            service = retrofit.create(SelfossService::class.java)
+        } catch (e: IllegalArgumentException) {
+            Config.logoutAndRedirect(c, callingActivity, config.settings.edit(), baseUrlFail = true)
+        }
     }
 
     fun login(): Call<SuccessResponse> =

@@ -56,6 +56,18 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        if (intent.getBooleanExtra("baseUrlFail", false)) {
+            val alertDialog = AlertDialog.Builder(this).create()
+            alertDialog.setTitle(getString(R.string.warning_wrong_url))
+            alertDialog.setMessage(getString(R.string.base_url_error))
+            alertDialog.setButton(
+                AlertDialog.BUTTON_NEUTRAL,
+                "OK",
+                { dialog, _ -> dialog.dismiss() })
+            alertDialog.show()
+        }
+
+
         settings = getSharedPreferences(Config.settingsName, Context.MODE_PRIVATE)
         if (settings.getString("url", "").isNotEmpty()) {
             goToMain()
@@ -177,7 +189,7 @@ class LoginActivity : AppCompatActivity() {
             editor.putString("httpPassword", httpPassword)
             editor.apply()
 
-            val api = SelfossApi(this@LoginActivity)
+            val api = SelfossApi(this, this@LoginActivity)
             api.login().enqueue(object : Callback<SuccessResponse> {
                 private fun preferenceError() {
                     editor.remove("url")

@@ -129,7 +129,7 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
         mCustomTabActivityHelper = CustomTabActivityHelper()
 
-        api = SelfossApi(this)
+        api = SelfossApi(this, this@HomeActivity)
         items = ArrayList()
 
         mBottomBar = findViewById(R.id.bottomBar) as BottomBar
@@ -700,14 +700,7 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
                 return true
             }
             R.id.action_disconnect -> {
-                editor.remove("url")
-                editor.remove("login")
-                editor.remove("password")
-                editor.apply()
-                val intent = Intent(this, LoginActivity::class.java)
-                startActivity(intent)
-                finish()
-                return true
+                return Config.logoutAndRedirect(this, this@HomeActivity, editor)
             }
             R.id.action_share_the_app -> {
                 if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this) == ConnectionResult.SUCCESS) {

@@ -37,7 +37,7 @@ class AddSourceActivity : AppCompatActivity() {
         var api: SelfossApi? = null
 
         try {
-            api = SelfossApi(this)
+            api = SelfossApi(this, this@AddSourceActivity)
         } catch (e: IllegalArgumentException) {
             mustLoginToAddSource()
         }

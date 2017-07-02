@@ -30,7 +30,7 @@ class SourcesActivity : AppCompatActivity() {
         val mFab = findViewById(R.id.fab) as FloatingActionButton
         val mRecyclerView = findViewById(R.id.activity_sources) as RecyclerView
         val mLayoutManager = LinearLayoutManager(this)
-        val api = SelfossApi(this)
+        val api = SelfossApi(this, this@SourcesActivity)
         var items: ArrayList<Sources> = ArrayList()
 
         mFab.attachToRecyclerView(mRecyclerView)
