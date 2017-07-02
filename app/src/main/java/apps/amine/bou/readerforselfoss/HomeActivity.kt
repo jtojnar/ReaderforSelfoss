@@ -532,6 +532,9 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
             mSwipeRefreshLayout.isRefreshing = false
         }
 
+        if (!mSwipeRefreshLayout.isRefreshing)
+            mSwipeRefreshLayout.post { mSwipeRefreshLayout.isRefreshing = true }
+
         call(maybeTagFilter?.tag, maybeSourceFilter?.id?.toLong(), maybeSearchFilter)
             .enqueue(object : Callback<List<Item>> {
                 override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
