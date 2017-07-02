@@ -20,6 +20,7 @@ import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 
 import com.anupcowkur.reservoir.Reservoir
@@ -86,6 +87,7 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     private var maybeSourceFilter: Sources? = null
     private var maybeSearchFilter: String? = null
 
+    private lateinit var emptyText: TextView
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mBottomBar: BottomBar
     private lateinit var mCoordinatorLayout: CoordinatorLayout
@@ -156,6 +158,8 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         mCoordinatorLayout = findViewById(R.id.coordLayout)
         mSwipeRefreshLayout = findViewById(R.id.swipeRefreshLayout)
         mRecyclerView = findViewById(R.id.my_recycler_view)
+
+        emptyText = findViewById(R.id.emptyText)
 
         reloadLayoutManager()
 
@@ -518,7 +522,13 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
             }
             if (didUpdate)
                 handleListResult()
-            if (items.isEmpty()) Toast.makeText(this@HomeActivity, R.string.nothing_here, Toast.LENGTH_SHORT).show()
+            if (items.isEmpty()) {
+                emptyText.visibility = View.VISIBLE
+                mRecyclerView.visibility = View.GONE
+            } else {
+                emptyText.visibility = View.GONE
+                mRecyclerView.visibility = View.VISIBLE
+            }
             mSwipeRefreshLayout.isRefreshing = false
         }
 
