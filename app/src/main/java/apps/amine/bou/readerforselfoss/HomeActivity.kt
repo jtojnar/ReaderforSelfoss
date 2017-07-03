@@ -194,6 +194,8 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
                         }
                         tabNew.setBadgeCount(items.size - 1)
 
+                        mayBeEmpty()
+
                     } catch (e: IndexOutOfBoundsException) {}
 
                 }
@@ -502,6 +504,15 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         }
     }
 
+    fun mayBeEmpty() =
+        if (items.isEmpty()) {
+            emptyText.visibility = View.VISIBLE
+            mRecyclerView.visibility = View.GONE
+        } else {
+            emptyText.visibility = View.GONE
+            mRecyclerView.visibility = View.VISIBLE
+        }
+
     private fun getElementsAccordingToTab() =
         when (elementsShown) {
             UNREAD_SHOWN -> getUnRead()
@@ -522,13 +533,7 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
             }
             if (didUpdate)
                 handleListResult()
-            if (items.isEmpty()) {
-                emptyText.visibility = View.VISIBLE
-                mRecyclerView.visibility = View.GONE
-            } else {
-                emptyText.visibility = View.GONE
-                mRecyclerView.visibility = View.VISIBLE
-            }
+            mayBeEmpty()
             mSwipeRefreshLayout.isRefreshing = false
         }
 
