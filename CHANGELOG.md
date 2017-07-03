@@ -1,3 +1,7 @@
+**1.5.1.3**
+
+- Fixes introduces by the previous alpha (1.5.1.2)
+
 **1.5.1.2**
 
 - Added testing to the CI.
