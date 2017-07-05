@@ -1,5 +1,7 @@
 # ReaderForSelfoss
 
+[![Gitter chat](https://badges.gitter.im/amine-bou/ReaderForSelfoss.png)](https://gitter.im/amine-bou/ReaderForSelfoss)
+
 [![CircleCI](https://circleci.com/gh/aminecmi/ReaderforSelfoss/tree/master.svg?style=svg)](https://circleci.com/gh/aminecmi/ReaderforSelfoss/tree/master)
 
 [![codebeat badge](https://codebeat.co/badges/bce66c0f-fd28-4341-a159-3b6dd22ac854)](https://codebeat.co/projects/github-com-aminecmi-readerforselfoss-master)
