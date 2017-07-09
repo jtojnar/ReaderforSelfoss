@@ -1,4 +1,8 @@
-**1.5.1.3**
+**1.5.1.5**
+
+- THEMES !!!! For now, the app has predefined themes. You can ask for new ones until I make them dynamic.
+
+**1.5.1.3/4**
 
 - Fixes introduces by the previous alpha (1.5.1.2)
 
