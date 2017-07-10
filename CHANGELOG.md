@@ -1,3 +1,7 @@
+**1.5.1.6**
+
+- Added back the badges after it was fixed on the library side.
+
 **1.5.1.5**
 
 - THEMES !!!! For now, the app has predefined themes. You can ask for new ones until I make them dynamic.

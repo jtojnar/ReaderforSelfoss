@@ -53,6 +53,8 @@ import apps.amine.bou.readerforselfoss.api.selfoss.*
 import apps.amine.bou.readerforselfoss.settings.SettingsActivity
 import apps.amine.bou.readerforselfoss.themes.AppColors
 import apps.amine.bou.readerforselfoss.utils.Config
+import apps.amine.bou.readerforselfoss.utils.bottombar.maybeShow
+import apps.amine.bou.readerforselfoss.utils.bottombar.removeBadge
 import apps.amine.bou.readerforselfoss.utils.checkAndDisplayStoreApk
 import apps.amine.bou.readerforselfoss.utils.checkApkVersion
 import apps.amine.bou.readerforselfoss.utils.customtabs.CustomTabActivityHelper
@@ -183,7 +185,7 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
                         } else {
                             (recyclerView.adapter as ItemListAdapter).removeItemAtIndex(position)
                         }
-                        //tabNew.setBadgeCount(items.size - 1)
+                        tabNewBadge.setText("${items.size}").maybeShow()
 
                         mayBeEmpty()
 
@@ -202,28 +204,37 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
         bottomBar = findViewById(R.id.bottomBar)
 
-        tabNewBadge = TextBadgeItem().setText("")
-        tabArchiveBadge = TextBadgeItem().setText("")
-        tabStarredBadge = TextBadgeItem().setText("")
+        tabNewBadge = TextBadgeItem()
+            .setText("")
+            .setHideOnSelect(false).hide(false)
+            .setBackgroundColor(appColors.primary)
+        tabArchiveBadge = TextBadgeItem()
+            .setText("")
+            .setHideOnSelect(false).hide(false)
+            .setBackgroundColor(appColors.primary)
+        tabStarredBadge = TextBadgeItem()
+            .setText("")
+            .setHideOnSelect(false).hide(false)
+            .setBackgroundColor(appColors.primary)
 
         val tabNew =
             BottomNavigationItem(
                 R.drawable.ic_fiber_new_black_24dp,
                 getString(R.string.tab_new)
             ).setActiveColor(appColors.accent)
-                //.setBadgeItem(tabNewBadge)
+                .setBadgeItem(tabNewBadge)
         val tabArchive =
             BottomNavigationItem(
                 R.drawable.ic_archive_black_24dp,
                 getString(R.string.tab_read)
             ).setActiveColor(appColors.dark)
-          //      .setBadgeItem(tabArchiveBadge)
+                .setBadgeItem(tabArchiveBadge)
         val tabStarred =
             BottomNavigationItem(
                 R.drawable.ic_favorite_black_24dp,
                 getString(R.string.tab_favs)
             ).setActiveColorResource(R.color.pink)
-            //    .setBadgeItem(tabStarredBadge)
+                .setBadgeItem(tabStarredBadge)
 
         bottomBar
             .addItem(tabNew)
@@ -649,24 +660,31 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
             api.stats.enqueue(object : Callback<Stats> {
                 override fun onResponse(call: Call<Stats>, response: Response<Stats>) {
                     if (response.body() != null) {
-                    tabStarredBadge.setText(response.body()!!.unread.toString())
+                        if (displayUnreadCount)
+                            tabNewBadge
+                                .setText(response.body()!!.unread.toString())
+                                .maybeShow()
                         if (displayAllCount) {
-                            tabStarredBadge.setText(response.body()!!.total.toString())
-                            tabStarredBadge.setText(response.body()!!.starred.toString())
-                        }/* else {
-                            tabArchive.removeBadge()
-                            tabStarred.removeBadge()
-                        }*/
+                            tabArchiveBadge
+                                .setText(response.body()!!.total.toString())
+                                .maybeShow()
+                            tabStarredBadge
+                                .setText(response.body()!!.starred.toString())
+                                .maybeShow()
+                        } else {
+                            tabArchiveBadge.removeBadge()
+                            tabStarredBadge.removeBadge()
+                        }
                     }
                 }
 
                 override fun onFailure(call: Call<Stats>, t: Throwable) {}
             })
-        }/* else {
-            tabNew.removeBadge()
-            tabArchive.removeBadge()
-            tabStarred.removeBadge()
-        }*/
+        } else {
+            tabNewBadge.removeBadge()
+            tabArchiveBadge.removeBadge()
+            tabStarredBadge.removeBadge()
+        }
     }
 
     private fun calculateNoOfColumns(): Int {
