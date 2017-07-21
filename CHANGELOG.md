@@ -1,3 +1,9 @@
+**1.5.1.7**
+
+- Bug fixes.
+
+- Code cleaning
+
 **1.5.1.6**
 
 - Added back the badges after it was fixed on the library side.
