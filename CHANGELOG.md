@@ -1,3 +1,7 @@
+**1.5.1.8**
+
+- Fixes and libs updates.
+
 **1.5.1.7**
 
 - Bug fixes.
