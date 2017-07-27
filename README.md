@@ -1,6 +1,6 @@
 # ReaderForSelfoss
 
-[![Build Status](https://travis-ci.org/aminecmi/ReaderforSelfoss.svg?branch=master)](https://travis-ci.org/aminecmi/ReaderforSelfoss)
+[![Build Status](http://jenkins.amine-bou.fr/job/ReaderForSelfoss/badge/icon)](http://jenkins.amine-bou.fr/job/ReaderForSelfoss/)
 
 [![Gitter chat](https://badges.gitter.im/amine-bou/ReaderForSelfoss.png)](https://gitter.im/amine-bou/ReaderForSelfoss)
 
