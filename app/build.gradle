@@ -8,6 +8,19 @@ buildscript {
     }
 }
 
+def gitVersion() {
+    def process = "git describe --abbrev=0 --tags".execute()
+    return process.text.substring(1).replaceAll("\\.", "")
+}
+
+def versionCodeFromGit() {
+    return gitVersion().toInteger()
+}
+
+def versionNameFromGit() {
+    return gitVersion().trim()
+}
+
 apply plugin: 'com.android.application'
 
 apply plugin: 'io.fabric'
@@ -25,8 +38,8 @@ android {
         applicationId "apps.amine.bou.readerforselfoss"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 15110
-        versionName "1.5.1.10"
+        versionCode versionCodeFromGit()
+        versionName versionNameFromGit()
 
         // Enabling multidex support.
         multiDexEnabled true
