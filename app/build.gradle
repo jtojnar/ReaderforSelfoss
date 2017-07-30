@@ -14,10 +14,12 @@ def gitVersion() {
 }
 
 def versionCodeFromGit() {
+    println "version code [$gitVersion().toInteger()]"
     return gitVersion().toInteger()
 }
 
 def versionNameFromGit() {
+    println "version code [$gitVersion()trim()]"
     return gitVersion().trim()
 }
 
